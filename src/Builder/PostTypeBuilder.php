@@ -39,6 +39,13 @@ class PostTypeBuilder extends Builder {
 	public $register_method = 'register_post_type';
 
 	/**
+	 * The register method args.
+	 *
+	 * @var array
+	 */
+	public $register_method_args = array( 'type', 'config' );
+
+	/**
 	 * Name of the post type shown in the menu. Usually plural. Default is value of $labels['name'].
 	 *
 	 * @param string $label The post type label.
