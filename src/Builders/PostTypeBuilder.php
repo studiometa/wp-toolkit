@@ -10,7 +10,7 @@
  * @version    1.0.0
  */
 
-namespace Studiometa\WP\Builder;
+namespace Studiometa\WP\Builders;
 
 /**
  * Build a custom post type.

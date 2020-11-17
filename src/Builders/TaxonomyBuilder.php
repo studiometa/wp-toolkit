@@ -10,7 +10,7 @@
  * @version    1.0.0
  */
 
-namespace Studiometa\WP\Builder;
+namespace Studiometa\WP\Builders;
 
 /**
  * Build a custom post type.
@@ -48,7 +48,7 @@ class TaxonomyBuilder extends Builder {
 	 *
 	 * @var string|array
 	 */
-	private $post_types = array();
+	protected $post_types = array();
 
 	/**
 	 * Set the taxonomy post types.
