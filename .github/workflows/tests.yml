@@ -1,0 +1,82 @@
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+name: Tests
+
+jobs:
+  phpstan:
+    name: PHPStan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: PHPStan
+        uses: docker://oskarstark/phpstan-ga
+        with:
+          args: analyse src/
+
+  phpcs:
+    name: PHPCS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache Composer Downloads
+        uses: actions/cache@v2
+        with:
+          path: vendor/
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+
+      - name: Cache PHP dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+
+      - uses: php-actions/composer@v4
+        with:
+          php_version: 7.3
+          composer_version: 1
+
+      - name: PHPCS
+        uses: chekalsky/phpcs-action@v1
+        with:
+          phpcs_bin_path: ./vendor/bin/phpcs
+
+  pest:
+    name: Pest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Get Composer Cache Directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache Composer Downloads
+        uses: actions/cache@v2
+        with:
+          path: vendor/
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+
+      - name: Cache PHP dependencies
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+
+      - uses: php-actions/composer@v4
+        with:
+          php_version: 7.3
+          composer_version: 1
+
+      - name: Pest
+        run: ./vendor/bin/pest
