@@ -10,7 +10,7 @@
  * @version    1.0.0
  */
 
-namespace Studiometa\WP\Builder;
+namespace Studiometa\WP\Builders;
 
 /**
  * Cleanup a WordPress project for security and performance.
@@ -43,6 +43,13 @@ abstract class Builder {
 	 * @var string
 	 */
 	public $register_method = '';
+
+	/**
+	 * The key for the register method arguments.
+	 *
+	 * @var array
+	 */
+	public $register_method_args = array();
 
 	/**
 	 * __construct
@@ -92,21 +99,31 @@ abstract class Builder {
 	}
 
 	/**
-	 * Get the builder type.
-	 *
-	 * @return string The builder type.
-	 */
-	private function get_type():string {
-		return $this->type;
-	}
-
-	/**
 	 * Get the register method name.
 	 *
 	 * @return string The register method name.
 	 */
 	private function get_register_method():string {
 		return $this->register_method;
+	}
+
+	/**
+	 * Get the register method argument names.
+	 *
+	 * @return array The register method name.
+	 */
+	private function get_register_method_args():array {
+		return $this->register_method_args;
+	}
+
+	/**
+	 * Get an instance property value.
+	 *
+	 * @param  string $key The property to get.
+	 * @return mixed       The property value.
+	 */
+	private function get( string $key ) {
+		return $this->{$key};
 	}
 
 	/**
@@ -117,7 +134,8 @@ abstract class Builder {
 	public function register():void {
 		$register_method = $this->get_register_method();
 		if ( $register_method && is_callable( $register_method ) ) {
-			$register_method( $this->get_type(), $this->get_config() );
+			$args = array_map( array( $this, 'get' ), $this->get_register_method_args() );
+			$register_method( ...$args );
 		}
 	}
 }
