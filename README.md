@@ -1,6 +1,9 @@
-# WordPress utilities
+# WordPress toolkit
 
-> Boost your WordPress development with PHP utilities.
+[![Packagist Version](https://img.shields.io/github/v/release/studiometa/wp?include_prereleases&label=packagist&style=flat-square)](https://packagist.org/packages/studiometa/wp)
+[![License MIT](https://img.shields.io/packagist/l/studiometa/wp?style=flat-square)](https://packagist.org/packages/studiometa/wp)
+
+> A PHP toolkit to boost your WordPress development! 🚀
 
 ## Installation
 
@@ -24,8 +27,14 @@ new Assets( get_template_directory() );
 new Cleanup();
 
 // Create Custom Post Type
-(new PostTypeBuilder( 'product' ))
-  ->set_labels( 'Product', 'Products' )
+$cpt = new PostTypeBuilder( 'product' );
+$cpt->set_labels( 'Product', 'Products' )
   ->set_has_archive( true )
+  ->register();
+
+// Create Custom Taxonomy
+$tax = new TaxonomyBuilder( 'product-cat' );
+$tax->set_post_types( 'product' )
+  ->set_labels( 'Product Category', 'Product Categories' )
   ->register();
 ```

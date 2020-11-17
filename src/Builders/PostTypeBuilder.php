@@ -10,7 +10,7 @@
  * @version    1.0.0
  */
 
-namespace Studiometa\WP\Builder;
+namespace Studiometa\WP\Builders;
 
 /**
  * Build a custom post type.
@@ -37,6 +37,13 @@ class PostTypeBuilder extends Builder {
 	 * @var string
 	 */
 	public $register_method = 'register_post_type';
+
+	/**
+	 * The register method args.
+	 *
+	 * @var array
+	 */
+	public $register_method_args = array( 'type', 'config' );
 
 	/**
 	 * Name of the post type shown in the menu. Usually plural. Default is value of $labels['name'].
