@@ -5,15 +5,6 @@ use Studiometa\WP\Builder\PostTypeBuilder;
 it(
 	'should register a custom post type',
 	function() {
-		function register_post_type( $type, $config ) {
-			test()->type   = $type;
-			test()->config = $config;
-		}
-
-		function __( $string, $domain ) {
-			return $string;
-		}
-
 		( new PostTypeBuilder( 'product' ) )
 		->set_labels( 'Product', 'Products' )
 		->register();
