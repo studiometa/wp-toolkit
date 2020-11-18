@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<ruleset name="studiometa-wp-assets">
+<ruleset name="studiometa-wp-toolkit">
   <!-- Define file and folders to lint -->
   <file>./src/</file>
   <file>./tests/</file>
