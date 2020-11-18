@@ -2,7 +2,7 @@
 /**
  * Utilities to clean up a WordPress project.
  *
- * @package    studiometa/wp
+ * @package    studiometa/wp-toolkit
  * @author     Titouan Mathis <titouan@studiometa.fr>
  * @copyright  2020 Studio Meta
  * @license    https://opensource.org/licenses/MIT

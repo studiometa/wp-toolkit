@@ -1,6 +1,6 @@
 <?php
 
-use Studiometa\WP\Builders\PostTypeBuilder;
+use Studiometa\WPToolkit\Builders\PostTypeBuilder;
 
 it(
 	'should register a custom post type',
