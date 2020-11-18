@@ -1,6 +1,6 @@
 <?php
 
-use Studiometa\WP\Builders\TaxonomyBuilder;
+use Studiometa\WPToolkit\Builders\TaxonomyBuilder;
 
 it(
 	'should register a custom taxonomy',

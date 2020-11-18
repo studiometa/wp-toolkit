@@ -1,7 +1,7 @@
 # WordPress toolkit
 
-[![Packagist Version](https://img.shields.io/github/v/release/studiometa/wp?include_prereleases&label=packagist&style=flat-square)](https://packagist.org/packages/studiometa/wp)
-[![License MIT](https://img.shields.io/packagist/l/studiometa/wp?style=flat-square)](https://packagist.org/packages/studiometa/wp)
+[![Packagist Version](https://img.shields.io/github/v/release/studiometa/wp-toolkit?include_prereleases&label=packagist&style=flat-square)](https://packagist.org/packages/studiometa/wp)
+[![License MIT](https://img.shields.io/packagist/l/studiometa/wp-toolkit?style=flat-square)](https://packagist.org/packages/studiometa/wp)
 
 > A PHP toolkit to boost your WordPress development! 🚀
 
@@ -10,15 +10,15 @@
 Install the package via Composer: 
 
 ```bash
-composer require studiometa/wp
+composer require studiometa/wp-toolkit
 ```
 
 ## Usage
 
 ```php
-use Studiometa\WP\Assets;
-use Studiometa\WP\Cleanup;
-use Studiometa\WP\Builders\PostTypeBuilder;
+use Studiometa\WPToolkit\Assets;
+use Studiometa\WPToolkit\Cleanup;
+use Studiometa\WPToolkit\Builders\PostTypeBuilder;
 
 // Load assets from `assets.yaml` configuration
 new Assets( get_template_directory() );

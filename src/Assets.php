@@ -2,7 +2,7 @@
 /**
  * Manage your WordPress assets with a simple YAML configuration file.
  *
- * @package    studiometa/wp
+ * @package    studiometa/wp-toolkit
  * @author     Titouan Mathis <titouan@studiometa.fr>
  * @copyright  2020 Studio Meta
  * @license    https://opensource.org/licenses/MIT

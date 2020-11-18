@@ -1,6 +1,6 @@
 {
-  "name": "studiometa/wp",
-  "version": "1.0.0-alpha2",
+  "name": "studiometa/wp-toolkit",
+  "version": "1.0.0-alpha3",
   "description": "WordPress utilities for Studio Meta.",
   "license": "MIT",
   "type": "library",
@@ -20,7 +20,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Studiometa\\WP\\": "src/"
+      "Studiometa\\WPToolkit\\": "src/"
     }
   },
   "scripts": {
