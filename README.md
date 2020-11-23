@@ -2,6 +2,7 @@
 
 [![Packagist Version](https://img.shields.io/github/v/release/studiometa/wp-toolkit?include_prereleases&label=packagist&style=flat-square)](https://packagist.org/packages/studiometa/wp)
 [![License MIT](https://img.shields.io/packagist/l/studiometa/wp-toolkit?style=flat-square)](https://packagist.org/packages/studiometa/wp)
+[![Codecov](https://img.shields.io/codecov/c/github/studiometa/wp-toolkit?style=flat-square)](https://codecov.io/gh/studiometa/wp-toolkit/)
 
 > A PHP toolkit to boost your WordPress development! 🚀
 
