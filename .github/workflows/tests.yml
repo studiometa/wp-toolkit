@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - master
+      - develop
   pull_request:
 
 name: Tests
@@ -79,4 +80,14 @@ jobs:
           composer_version: 1
 
       - name: Pest
-        run: ./vendor/bin/pest
+        run: ./vendor/bin/pest --coverage --coverage-clover='coverage.xml'
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          flags: unittests
+          fail_ci_if_error: true
+          path_to_write_report: ./codecov_report.txt
+          verbose: true
