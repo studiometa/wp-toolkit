@@ -39,3 +39,49 @@ $tax->set_post_types( 'product' )
   ->set_labels( 'Product Category', 'Product Categories' )
   ->register();
 ```
+
+## Transient Cleaner
+### Usage
+> **Important** Transients keys must be prefixed with transient cleaner prefix (`TransientCleaner::PREFIX`) to be tracked.
+
+```php
+use Studiometa\WPToolkit\TransientCleaner;
+
+// 1. Set a transient with transient cleaner prefix.
+if ( $my_condition ) {
+  set_transient(
+    TransientCleaner::PREFIX . 'transient_key',
+    'example'
+  );
+}
+
+// 2. Initialize transient cleaner.
+$transient_cleaner = TransientCleaner::get_instance(
+  array(
+    'post'   => array(
+      'all'           => array(
+        TransientCleaner::PREFIX . 'transient_key',
+      ),
+      'post_type_key' => array(
+        TransientCleaner::PREFIX . 'transient_key',
+        TransientCleaner::PREFIX . 'transient_key_1',
+      )
+    ),
+    'term'   => array(
+      'all'                    => array(),
+      'your_taxonomy_type_key' => array(),
+      'category'               => array(),
+    ),
+    'option' => array(
+      'all'             => array(),
+      'option_key'      => array(),
+      'blogdescription' => array(),
+    ),
+  )
+);
+
+// Update config if needed.
+$transient_cleaner->set_config(array());
+
+// 3. Insert/Update post/term/option to see your transients deleted based on your config.
+``` 
