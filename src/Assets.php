@@ -151,21 +151,18 @@ class Assets {
 	/**
 	 * Register a single asset.
 	 *
-	 * @param  string       $type   The type of the asset: 'style' or 'script'.
-	 * @param  string       $handle The asset's handle.
-	 * @param  string|array $path   The asset's path in the theme.
+	 * @param  string       $type         The type of the asset: 'style' or 'script'.
+	 * @param  string       $handle       The asset's handle.
+	 * @param  string|array $path_details The asset's path in the theme.
 	 * @return void
 	 */
-	protected function register( string $type, string $handle, $path ):void {
-		if ( is_array( $path ) ) {
-			$_path     = $path;
-			$path      = $_path['path'];
-			$media     = $_path['media'] ?? 'all';
-			$in_footer = $_path['footer'] ?? true;
-		} else {
-			$media     = 'all';
-			$in_footer = true;
+	protected function register( string $type, string $handle, $path_details ):void {
+		if ( ! is_array( $path_details ) ) {
+			$path_details = array( 'path' => $path_details );
 		}
+		$path      = $path_details['path'];
+		$media     = $path_details['media'] ?? 'all';
+		$in_footer = $path_details['footer'] ?? true;
 
 		$public_path = get_template_directory_uri() . '/' . $path;
 
