@@ -73,7 +73,8 @@ jobs:
           composer_version: 1
 
       - name: Install WP Tests
-        run: ./bin/install-wp-tests.sh wordpress_test root root localhost latest
+        run: |
+          sudo /etc/init.d/mysql start && ./bin/install-wp-tests.sh wordpress_test root root localhost latest
 
       - name: PHPUnit
         run: ./vendor/bin/phpunit --coverage-clover='coverage.xml'
