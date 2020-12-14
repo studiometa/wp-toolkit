@@ -73,7 +73,7 @@ jobs:
           composer_version: 1
 
       - name: Pest
-        run: ./vendor/bin/pest --coverage --coverage-clover='coverage.xml'
+        run: ./vendor/bin/phpunit --coverage-clover='coverage.xml'
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
