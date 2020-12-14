@@ -49,8 +49,8 @@ jobs:
         with:
           phpcs_bin_path: ./vendor/bin/phpcs
 
-  pest:
-    name: Pest
+  phpunit:
+    name: PHPUnit
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -72,7 +72,10 @@ jobs:
           php_version: 7.3
           composer_version: 1
 
-      - name: Pest
+      - name: Install WP Tests
+        run: bin/install-wp-tests.sh wordpress_test root root localhost latest
+
+      - name: PHPUnit
         run: ./vendor/bin/phpunit --coverage-clover='coverage.xml'
 
       - name: Upload coverage to Codecov
