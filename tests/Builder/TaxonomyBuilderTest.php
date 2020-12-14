@@ -18,7 +18,7 @@ class TaxonomyBuilderTest extends WP_UnitTestCase {
 	/**
 	 * Test register function.
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	public function test_taxonomy_builder_register() {
 		$this->taxonomy_builder->register();
@@ -29,7 +29,7 @@ class TaxonomyBuilderTest extends WP_UnitTestCase {
 	/**
 	 * Test set_labels function.
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	public function test_taxonomy_builder_set_labels() {
 		$this->taxonomy_builder->set_labels( 'Category', 'Categories' );

@@ -2,8 +2,9 @@
 /**
  * PHPUnit bootstrap file
  *
- * @package Studiometa_Product_Import
+ * @package studiometa/wp-toolkit
  */
+
 $_tests_dir = getenv( 'WP_TESTS_DIR' );
 
 if ( ! $_tests_dir ) {

@@ -18,7 +18,7 @@ class PostTypeBuilderTest extends WP_UnitTestCase {
 	/**
 	 * Test register function.
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	public function test_post_type_builder_register() {
 		$this->post_type_builder->register();
@@ -29,7 +29,7 @@ class PostTypeBuilderTest extends WP_UnitTestCase {
 	/**
 	 * Test set_labels function.
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	public function test_post_type_builder_set_labels() {
 		$this->post_type_builder->set_labels( 'Product', 'Products' );
