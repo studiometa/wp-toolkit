@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - master
+      - develop
   pull_request:
 
 name: Tests
@@ -11,34 +12,32 @@ jobs:
     name: PHPStan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
       - name: PHPStan
         uses: docker://oskarstark/phpstan-ga
+        env:
+          REQUIRE_DEV: true
         with:
-          args: analyse src/
+          args: analyse
 
   phpcs:
     name: PHPCS
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Determine composer cache directory
+        shell: bash
+        run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
-      - name: Cache Composer Downloads
+      - name: Cache dependencies
         uses: actions/cache@v2
         with:
-          path: vendor/
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-
-      - name: Cache PHP dependencies
-        uses: actions/cache@v2
-        with:
-          path: vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
 
       - uses: php-actions/composer@v4
         with:
@@ -54,24 +53,19 @@ jobs:
     name: Pest
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+      - name: Determine composer cache directory
+        shell: bash
+        run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
 
-      - name: Cache Composer Downloads
+      - name: Cache dependencies
         uses: actions/cache@v2
         with:
-          path: vendor/
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
-
-      - name: Cache PHP dependencies
-        uses: actions/cache@v2
-        with:
-          path: vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          path: ${{ env.COMPOSER_CACHE_DIR }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
 
       - uses: php-actions/composer@v4
         with:
@@ -79,4 +73,14 @@ jobs:
           composer_version: 1
 
       - name: Pest
-        run: ./vendor/bin/pest
+        run: ./vendor/bin/pest --coverage --coverage-clover='coverage.xml'
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.xml
+          flags: unittests
+          fail_ci_if_error: true
+          path_to_write_report: ./codecov_report.txt
+          verbose: true
