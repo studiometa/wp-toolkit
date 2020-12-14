@@ -24,7 +24,7 @@ class Cleanup {
 		add_action( 'init', array( $this, 'cleanup_head' ) );
 
 		// Remove WP version from RSS.
-		add_filter( 'the_generator', array( $this, 'remove_version' ) );
+		add_filter( 'the_generator', '__return_empty_string' );
 
 		// Remove WordPress version from js & css enqueued files.
 		add_filter( 'style_loader_src', array( $this, 'remove_version_css_js' ), 9999 );
@@ -75,25 +75,13 @@ class Cleanup {
 	}
 
 	/**
-	 * Remove WordPress version number in meta tags
-	 *
-	 * @return String
-	 */
-	public function remove_version() {
-		return '';
-	}
-
-	/**
 	 * Suppress version number in enqued css & js files
 	 *
 	 * @param  string $src The source path of the asset.
 	 * @return string
 	 */
 	public function remove_version_css_js( string $src ):string {
-		if ( strpos( $src, 'ver=' ) ) {
-			$src = remove_query_arg( 'ver', $src );
-		}
-		return $src;
+		return remove_query_arg( 'ver', $src );
 	}
 
 	/**
