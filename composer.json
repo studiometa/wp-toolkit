@@ -14,8 +14,7 @@
     "dealerdirect/phpcodesniffer-composer-installer": "^0.5.0",
     "szepeviktor/phpstan-wordpress": "^0.7.1",
     "php-stubs/wordpress-stubs": "^5.5",
-    "phpunit/phpunit": "^9.3.10",
-    "pestphp/pest": "^0.3.12"
+    "phpunit/phpunit": "^7.0"
   },
   "autoload": {
     "psr-4": {
@@ -25,7 +24,7 @@
   "scripts": {
     "phpcs": "phpcs -s --colors --standard=./phpcs.xml",
     "phpstan": "phpstan analyse --memory-limit=512M",
-    "pest": "pest"
+    "phpunit": "phpunit"
   },
   "minimum-stability": "dev",
   "prefer-stable": true
