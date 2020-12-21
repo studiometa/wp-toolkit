@@ -21,15 +21,6 @@ composer require studiometa/wp-toolkit
 ## Usage
 
 ```php
-
-// Load assets from `assets.yaml` configuration
-use Studiometa\WPToolkit\Assets;
-new Assets( get_template_directory() );
-
-// Clean WordPress
-use Studiometa\WPToolkit\Cleanup;
-new Cleanup();
-
 // Create Custom Post Type
 use Studiometa\WPToolkit\Builders\PostTypeBuilder;
 
@@ -61,10 +52,14 @@ class CustomManager implements ManagerInterface {
 
 // Init all managers
 use Studiometa\WPToolkit\Managers\ManagerFactory;
+use Studiometa\WPToolkit\Managers\AssetsManager;
+use Studiometa\WPToolkit\Managers\CleanupManager;
 
 ManagerFactory::init(
   array(
-    new CustomManager(),
+    new AssetsManager(),
+    new CleanupManager(),
+    new CustomManager()
   )
 );
 ```

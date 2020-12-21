@@ -3,23 +3,25 @@
  * Utilities to clean up a WordPress project.
  *
  * @package    studiometa/wp-toolkit
- * @author     Titouan Mathis <titouan@studiometa.fr>
+ * @author     Studio Meta <agence@studiometa.fr>
  * @copyright  2020 Studio Meta
  * @license    https://opensource.org/licenses/MIT
  * @since      1.0.0
  * @version    1.0.0
  */
 
-namespace Studiometa\WP;
+namespace Studiometa\WPToolkit\Managers;
+
+use Studiometa\WPToolkit\Managers\ManagerInterface;
 
 /**
  * Cleanup a WordPress project for security and performance.
  */
-class Cleanup {
+class CleanupManager implements ManagerInterface {
 	/**
-	 * __construct
+	 * @inheritdoc
 	 */
-	public function __construct() {
+	public function run() {
 		// Clean up <head>.
 		add_action( 'init', array( $this, 'cleanup_head' ) );
 

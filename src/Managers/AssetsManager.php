@@ -3,22 +3,23 @@
  * Manage your WordPress assets with a simple YAML configuration file.
  *
  * @package    studiometa/wp-toolkit
- * @author     Titouan Mathis <titouan@studiometa.fr>
+ * @author     Studio Meta <agence@studiometa.fr>
  * @copyright  2020 Studio Meta
  * @license    https://opensource.org/licenses/MIT
  * @since      1.0.0
  * @version    1.0.0
  */
 
-namespace Studiometa\WP;
+namespace Studiometa\WPToolkit\Managers;
 
+use Studiometa\WPToolkit\Managers\ManagerInterface;
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Yaml\Exception\ParseException;
 
 /**
  * Helper class to manage a theme's assets.
  */
-class Assets {
+class AssetsManager implements ManagerInterface {
 	/**
 	 * The parsed configuration.
 	 *
@@ -27,18 +28,16 @@ class Assets {
 	public $config;
 
 	/**
-	 * __construct
-	 *
-	 * @param string $theme_path The absolute path to the theme.
+	 * @inheritdoc
 	 */
-	public function __construct( string $theme_path ) {
-		$config_path = $theme_path . '/assets.yml';
+	public function run() {
+		$config_path = get_template_directory() . '/assets.yml';
 
 		if ( ! file_exists( $config_path ) ) {
-			$config_path = $theme_path . '/assets.yaml';
+			$config_path = get_template_directory() . '/assets.yaml';
 
 			if ( ! file_exists( $config_path ) ) {
-				$msg = "No assets config file found. Try adding an `assets.yml` file in '$theme_path'.";
+				$msg = "No assets config file found. Try adding an `assets.yml` file in 'get_template_directory()'.";
 				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
 				trigger_error( esc_html( $msg ), E_USER_NOTICE );
 				return;
