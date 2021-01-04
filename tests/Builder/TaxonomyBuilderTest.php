@@ -40,4 +40,17 @@ class TaxonomyBuilderTest extends WP_UnitTestCase {
 		$this->assertEquals( 'Category', $config['labels']['singular_name'] );
 		$this->assertEquals( 'Categories', $config['labels']['menu_name'] );
 	}
+
+	/**
+	 * Test set_post_types function.
+	 *
+	 * @return void
+	 */
+	public function test_taxonomy_builder_set_post_types() {
+		$this->taxonomy_builder->set_post_types( 'tag' );
+
+		$post_types = $this->taxonomy_builder->get_post_types();
+
+		$this->assertEquals( 'tag', $post_types );
+	}
 }
