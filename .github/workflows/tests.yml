@@ -14,6 +14,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - uses: php-actions/composer@v5
+        with:
+          php_version: 7.3
+
       - name: PHPStan
         uses: docker://oskarstark/phpstan-ga
         env:
@@ -39,10 +44,9 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
-      - uses: php-actions/composer@v4
+      - uses: php-actions/composer@v5
         with:
           php_version: 7.3
-          composer_version: 1
 
       - name: PHPCS
         uses: chekalsky/phpcs-action@v1
@@ -56,6 +60,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install dependencies
+        uses: php-actions/composer@v5
+        with:
+          php_version: 7.3
+
       - name: Determine composer cache directory
         shell: bash
         run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
@@ -67,17 +76,19 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
-      - uses: php-actions/composer@v4
-        with:
-          php_version: 7.3
-          composer_version: 1
-
       - name: Install WP Tests
         run: |
           sudo /etc/init.d/mysql start && ./bin/install-wp-tests.sh wordpress_test root root localhost latest
 
+      # Specify PHP 7.3 version to run PHPUnit and prevent Github action error (PHPUnit 7.* isn't compatible w/ PHP 8.*).
+      - name: Setup PHP 7.3
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.3'
+          coverage: xdebug
+
       - name: PHPUnit
-        run: ./vendor/bin/phpunit --coverage-clover='coverage.xml'
+        run: XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-clover='coverage.xml'
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
