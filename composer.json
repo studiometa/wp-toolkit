@@ -14,7 +14,8 @@
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
     "szepeviktor/phpstan-wordpress": "^0.7.1",
     "php-stubs/wordpress-stubs": "^5.5",
-    "phpunit/phpunit": "^7.0"
+    "phpunit/phpunit": "^7.0",
+    "phpstan/extension-installer": "^1.1"
   },
   "autoload": {
     "psr-4": {
