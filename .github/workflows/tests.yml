@@ -56,6 +56,17 @@ jobs:
   phpunit:
     name: PHPUnit
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+          image: mysql:5.7
+          env:
+              MYSQL_ROOT_PASSWORD: root
+              MYSQL_DATABASE: wordpress_test
+          ports:
+              - 3306:3306
+          options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -76,16 +87,18 @@ jobs:
           key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
-      - name: Install WP Tests
-        run: |
-          sudo /etc/init.d/mysql start && ./bin/install-wp-tests.sh wordpress_test root root localhost latest
-
       # Specify PHP 7.3 version to run PHPUnit and prevent Github action error (PHPUnit 7.* isn't compatible w/ PHP 8.*).
       - name: Setup PHP 7.3
         uses: shivammathur/setup-php@v2
         with:
           php-version: '7.3'
           coverage: xdebug
+
+      - name: Clean old WP Tests
+        run: mysql --host 127.0.0.1 --port 3306 -uroot -proot -e "DROP DATABASE IF EXISTS wordpress_test;" && rm -fr /tmp/wordpress*
+
+      - name: Install WP Tests
+        run: ./bin/install-wp-tests.sh wordpress_test root root 127.0.0.1 latest
 
       - name: PHPUnit
         run: XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-clover='coverage.xml'
