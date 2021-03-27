@@ -10,7 +10,7 @@
  * @version    1.0.0
  */
 
-namespace Studiometa\WP;
+namespace Studiometa\WPToolkit;
 
 use Symfony\Component\Yaml\Yaml;
 use Symfony\Component\Yaml\Exception\ParseException;
