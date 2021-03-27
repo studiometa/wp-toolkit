@@ -13,7 +13,6 @@
 namespace Studiometa\WPToolkit;
 
 use Symfony\Component\Yaml\Yaml;
-use Symfony\Component\Yaml\Exception\ParseException;
 
 /**
  * Helper class to manage a theme's assets.
