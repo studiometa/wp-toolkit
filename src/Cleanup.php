@@ -10,7 +10,7 @@
  * @version    1.0.0
  */
 
-namespace Studiometa\WP;
+namespace Studiometa\WPToolkit;
 
 /**
  * Cleanup a WordPress project for security and performance.
