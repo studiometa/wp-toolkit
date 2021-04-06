@@ -213,7 +213,7 @@ class TransientCleaner {
 	 * @param mixed $post_id post id.
 	 * @param mixed $post post.
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	public function post_transient_cleaner( $post_id, $post ) {
 		return $this->object_transient_cleaner(
@@ -231,7 +231,7 @@ class TransientCleaner {
 	 * @param int    $tt_id    Term taxonomy ID.
 	 * @param string $taxonomy Taxonomy.
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	public function term_transient_cleaner( int $term_id, int $tt_id, string $taxonomy ) {
 		return $this->object_transient_cleaner(
@@ -247,7 +247,7 @@ class TransientCleaner {
 	 *
 	 * @param string $option Option key.
 	 *
-	 * @return void
+	 * @return bool
 	 */
 	public function option_transient_cleaner( string $option ) {
 		return $this->object_transient_cleaner(

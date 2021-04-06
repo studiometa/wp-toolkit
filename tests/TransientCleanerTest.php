@@ -35,6 +35,19 @@ class TransientCleanerTest extends WP_UnitTestCase {
 		);
 
 		$this->transient_cleaner = TransientCleaner::get_instance( $this->config );
+
+		set_transient( self::POST_TRANSIENT_KEY, 'foo' );
+		set_transient( self::TERM_TRANSIENT_KEY, 'bar' );
+		set_transient( self::OPTION_TRANSIENT_KEY, 'baz' );
+
+		// Mock stored transient because WordPress `update_option` don't work in tests.
+		$this->transient_cleaner->set_stored_transients(
+			array(
+				self::POST_TRANSIENT_KEY,
+				self::TERM_TRANSIENT_KEY,
+				self::OPTION_TRANSIENT_KEY,
+			)
+		);
 	}
 
 	/**
@@ -81,10 +94,12 @@ class TransientCleanerTest extends WP_UnitTestCase {
 		$test_no_old_value = $this->transient_cleaner->merge_stored_transients_option_values( 'foo', false );
 		$test_old_value    = $this->transient_cleaner->merge_stored_transients_option_values( 'foo', 'foo_old' );
 		$test_merge_values = $this->transient_cleaner->merge_stored_transients_option_values( array( 'foo' ), array( 'foo_old' ) );
+		$test_merge_values_already_exists = $this->transient_cleaner->merge_stored_transients_option_values( array( 'foo' ), array( 'foo_old', 'foo' ) );
 
 		$this->assertEquals( 'foo', $test_no_old_value );
 		$this->assertEquals( 'foo_old', $test_old_value );
 		$this->assertEquals( array( 'foo_old', 'foo' ), $test_merge_values );
+		$this->assertEquals( array( 'foo_old', 'foo' ), $test_merge_values_already_exists );
 	}
 
 	/**
@@ -98,5 +113,64 @@ class TransientCleanerTest extends WP_UnitTestCase {
 
 		$this->assertFalse( $test_fail );
 		$this->assertTrue( $test_success );
+	}
+
+	/**
+	 * Test post transient cleaner.
+	 *
+	 * @return void
+	 */
+	public function test_post_transient_cleaner() {
+		$post            = new \stdClass();
+		$post->post_type = 'post';
+
+		$test_success = $this->transient_cleaner->post_transient_cleaner( 1, $post );
+
+		$config_1 = $this->transient_cleaner->get_config();
+		unset( $config_1['post'] );
+		$this->transient_cleaner->set_config( $config_1 );
+
+		$test_fail = $this->transient_cleaner->post_transient_cleaner( 1, $post );
+
+		$this->assertTrue( $test_success );
+		$this->assertFalse( $test_fail );
+	}
+
+	/**
+	 * Test term transient cleaner.
+	 *
+	 * @return void
+	 */
+	public function test_term_transient_cleaner() {
+		$taxonomy     = 'post_tag';
+		$test_success = $this->transient_cleaner->term_transient_cleaner( 1, 1, $taxonomy );
+
+		$config_1 = $this->transient_cleaner->get_config();
+		unset( $config_1['term'] );
+		$this->transient_cleaner->set_config( $config_1 );
+
+		$test_fail = $this->transient_cleaner->term_transient_cleaner( 1, 1, $taxonomy );
+
+		$this->assertTrue( $test_success );
+		$this->assertFalse( $test_fail );
+	}
+
+	/**
+	 * Test option transient cleaner.
+	 *
+	 * @return void
+	 */
+	public function test_option_transient_cleaner() {
+		$option       = 'baz_option';
+		$test_success = $this->transient_cleaner->option_transient_cleaner( $option );
+
+		$config_1 = $this->transient_cleaner->get_config();
+		unset( $config_1['option'] );
+		$this->transient_cleaner->set_config( $config_1 );
+
+		$test_fail = $this->transient_cleaner->option_transient_cleaner( $option );
+
+		$this->assertTrue( $test_success );
+		$this->assertFalse( $test_fail );
 	}
 }
