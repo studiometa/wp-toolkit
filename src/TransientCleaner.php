@@ -176,27 +176,24 @@ class TransientCleaner {
 	}
 
 	/**
-	 * Clear transient on post save.
+	 * Delete transient based on current content and transient key.
 	 *
-	 * @param mixed $post_id post id.
-	 * @param mixed $post post.
+	 * @param string   $type       Content type.
+	 * @param callable $validator  Function who control if the transient must be validate or no (must return boolean).
 	 *
 	 * @return bool
 	 */
-	public function post_transient_cleaner( $post_id, $post ) {
-		if ( ! is_array( $this->stored_transients ) || empty( $this->config['post'] ) ) {
+	protected function object_transient_cleaner( string $type, callable $validator ) {
+		if ( ! is_array( $this->stored_transients ) || empty( $this->config[ $type ] ) ) {
 			return false;
 		}
 
-		/*
-			Delete transient based on current post_type and transient key.
-		 */
-		foreach ( $this->config['post'] as $post_type_key => $transient_keys ) {
-			if ( 'all' !== $post_type_key && $post_type_key !== $post->post_type ) {
+		foreach ( $this->config[ $type ] as $type_key => $type_values ) {
+			if ( 'all' !== $type_key && false === call_user_func( $validator, $type_key ) ) {
 				continue;
 			}
 
-			foreach ( $transient_keys as $transient_key ) {
+			foreach ( $type_values as $transient_key ) {
 				foreach ( $this->stored_transients as $stored_transient ) {
 					if ( false === strpos( $stored_transient, $transient_key ) ) {
 						continue;
@@ -208,6 +205,23 @@ class TransientCleaner {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Clear transient on post save.
+	 *
+	 * @param mixed $post_id post id.
+	 * @param mixed $post post.
+	 *
+	 * @return void
+	 */
+	public function post_transient_cleaner( $post_id, $post ) {
+		return $this->object_transient_cleaner(
+			'post',
+			function( $key ) use ( $post ) {
+				return $key === $post->post_type;
+			}
+		);
 	}
 
 	/**
@@ -217,33 +231,15 @@ class TransientCleaner {
 	 * @param int    $tt_id    Term taxonomy ID.
 	 * @param string $taxonomy Taxonomy.
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	public function term_transient_cleaner( int $term_id, int $tt_id, string $taxonomy ) {
-		if ( ! is_array( $this->stored_transients ) || empty( $this->config['term'] ) ) {
-			return false;
-		}
-
-		/*
-			Delete transient based on taxonomy and transient key.
-		 */
-		foreach ( $this->config['term'] as $taxonomy_key => $transient_keys ) {
-			if ( 'all' !== $taxonomy_key && $taxonomy_key !== $taxonomy ) {
-				continue;
+		return $this->object_transient_cleaner(
+			'term',
+			function( $key ) use ( $taxonomy ) {
+				return $key === $taxonomy;
 			}
-
-			foreach ( $transient_keys as $transient_key ) {
-				foreach ( $this->stored_transients as $stored_transient ) {
-					if ( false === strpos( $stored_transient, $transient_key ) ) {
-						continue;
-					}
-
-					delete_transient( $stored_transient );
-				}
-			}
-		}
-
-		return true;
+		);
 	}
 
 	/**
@@ -251,32 +247,14 @@ class TransientCleaner {
 	 *
 	 * @param string $option Option key.
 	 *
-	 * @return bool
+	 * @return void
 	 */
 	public function option_transient_cleaner( string $option ) {
-		if ( ! is_array( $this->stored_transients ) || empty( $this->config['option'] ) ) {
-			return false;
-		}
-
-		/*
-			Delete transient based on post name and transient key.
-		 */
-		foreach ( $this->config['option'] as $option_key => $transient_keys ) {
-			if ( 'all' !== $option_key && false === strpos( $option, $option_key ) ) {
-				continue;
+		return $this->object_transient_cleaner(
+			'option',
+			function( $key ) use ( $option ) {
+				return strpos( $option, $key );
 			}
-
-			foreach ( $transient_keys as $transient_key ) {
-				foreach ( $this->stored_transients as $stored_transient ) {
-					if ( false === strpos( $stored_transient, $transient_key ) ) {
-						continue;
-					}
-
-					delete_transient( $stored_transient );
-				}
-			}
-		}
-
-		return true;
+		);
 	}
 }
