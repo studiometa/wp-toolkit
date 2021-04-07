@@ -16,13 +16,13 @@ namespace Studiometa\WPToolkit;
  * TransientCleaner class.
  */
 class TransientCleaner {
-	const PREFIX                   = 'wp_transient_cleaner_';
+	const PREFIX                   = 'wp_toolkit_transient_cleaner_';
 	const OPTION_STORED_TRANSIENTS = self::PREFIX . 'stored_transients';
 
 	/**
 	 * Class instance
 	 *
-	 * @var object|null
+	 * @var TransientCleaner|null
 	 */
 	private static $instance = null;
 
@@ -45,7 +45,7 @@ class TransientCleaner {
 	 *
 	 * @param array $config Configuration.
 	 */
-	public function __construct( $config = array() ) {
+	public function __construct( array $config = array() ) {
 		$this->set_stored_transients( get_option( self::OPTION_STORED_TRANSIENTS ) );
 		$this->set_config( $config );
 		$this->define_public_hooks();
@@ -54,11 +54,38 @@ class TransientCleaner {
 	/**
 	 * Get class instance.
 	 *
+	 * {@example}
+	 * ```php
+	 * TransientCleaner::get_instance(
+	 *   array(
+	 *     'post' => array(
+	 *       'all' => array(
+	 *         TransientCleaner::PREFIX . 'transient_key',
+	 *       ),
+	 *       'post_type_key' => array(
+	 *         TransientCleaner::PREFIX . 'transient_key',
+	 *         TransientCleaner::PREFIX . 'transient_key_1',
+	 *       )
+	 *     ),
+	 *     'term' => array(
+	 *       'all'                    => array(),
+	 *       'your_taxonomy_type_key' => array(),
+	 *       'category'               => array(),
+	 *     ),
+	 *     'option' => array(
+	 *       'all'             => array(),
+	 *       'option_key'      => array(),
+	 *       'blogdescription' => array(),
+	 *     ),
+	 *   )
+	 * );
+	 * ```
+	 *
 	 * @param array $config Configuration.
 	 *
-	 * @return object Class instance
+	 * @return TransientCleaner Class instance
 	 */
-	public static function get_instance( $config = array() ) {
+	public static function get_instance( array $config = array() ) : TransientCleaner {
 		if ( is_null( self::$instance ) ) {
 			self::$instance = new TransientCleaner( $config );
 		}
@@ -85,18 +112,46 @@ class TransientCleaner {
 	 *
 	 * @return array
 	 */
-	public function get_config() {
+	public function get_config() : array {
 		return $this->config;
 	}
 
 	/**
 	 * Set config.
 	 *
+	 * {@example}
+	 * ```php
+	 * TransientCleaner::get_instance()
+	 *   ->set_config(
+	 *     array(
+	 *       'post' => array(
+	 *         'all' => array(
+	 *           TransientCleaner::PREFIX . 'transient_key',
+	 *         ),
+	 *         'post_type_key' => array(
+	 *           TransientCleaner::PREFIX . 'transient_key',
+	 *           TransientCleaner::PREFIX . 'transient_key_1',
+	 *         )
+	 *       ),
+	 *       'term' => array(
+	 *         'all'                    => array(),
+	 *         'your_taxonomy_type_key' => array(),
+	 *         'category'               => array(),
+	 *       ),
+	 *       'option' => array(
+	 *         'all'             => array(),
+	 *         'option_key'      => array(),
+	 *         'blogdescription' => array(),
+	 *       ),
+	 *     )
+	 *   );
+	 * ```
+	 *
 	 * @param array $config Configuration.
 	 *
-	 * @return object
+	 * @return TransientCleaner
 	 */
-	public function set_config( array $config ) {
+	public function set_config( array $config ) : TransientCleaner {
 		$this->config = $config;
 
 		return $this;
@@ -116,9 +171,9 @@ class TransientCleaner {
 	 *
 	 * @param array|bool $value New value.
 	 *
-	 * @return object
+	 * @return TransientCleaner
 	 */
-	public function set_stored_transients( $value ) {
+	public function set_stored_transients( $value ) : TransientCleaner {
 		$this->stored_transients = $value;
 
 		return $this;
@@ -129,11 +184,10 @@ class TransientCleaner {
 	 *
 	 * @param array|bool $value     New value.
 	 * @param array|bool $old_value Old value.
-	 * @param string     $option    Option.
 	 *
 	 * @return array|bool           New value
 	 */
-	public function merge_stored_transients_option_values( $value, $old_value, $option = null ) {
+	public function merge_stored_transients_option_values( $value, $old_value ) {
 		// Return `$value` if no previous value.
 		if ( false === $old_value ) {
 			return $value;
@@ -161,7 +215,7 @@ class TransientCleaner {
 	 *
 	 * @return bool
 	 */
-	public function store_transient_key( string $transient_key ) {
+	public function store_transient_key( string $transient_key ) : bool {
 		if (
 			false === strpos( $transient_key, self::PREFIX )
 			|| false !== strpos( $transient_key, '_lock' )
@@ -183,7 +237,7 @@ class TransientCleaner {
 	 *
 	 * @return bool
 	 */
-	protected function object_transient_cleaner( string $type, callable $validator ) {
+	protected function object_transient_cleaner( string $type, callable $validator ) : bool {
 		if ( ! is_array( $this->stored_transients ) || empty( $this->config[ $type ] ) ) {
 			return false;
 		}
@@ -210,12 +264,12 @@ class TransientCleaner {
 	/**
 	 * Clear transient on post save.
 	 *
-	 * @param mixed $post_id post id.
-	 * @param mixed $post post.
+	 * @param mixed    $post_id post id.
+	 * @param \WP_Post $post post.
 	 *
 	 * @return bool
 	 */
-	public function post_transient_cleaner( $post_id, $post ) {
+	public function post_transient_cleaner( $post_id, \WP_Post $post ) : bool {
 		return $this->object_transient_cleaner(
 			'post',
 			function( $key ) use ( $post ) {
@@ -233,7 +287,7 @@ class TransientCleaner {
 	 *
 	 * @return bool
 	 */
-	public function term_transient_cleaner( int $term_id, int $tt_id, string $taxonomy ) {
+	public function term_transient_cleaner( int $term_id, int $tt_id, string $taxonomy ) : bool {
 		return $this->object_transient_cleaner(
 			'term',
 			function( $key ) use ( $taxonomy ) {
@@ -249,7 +303,7 @@ class TransientCleaner {
 	 *
 	 * @return bool
 	 */
-	public function option_transient_cleaner( string $option ) {
+	public function option_transient_cleaner( string $option ) : bool {
 		return $this->object_transient_cleaner(
 			'option',
 			function( $key ) use ( $option ) {

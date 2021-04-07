@@ -91,9 +91,9 @@ class TransientCleanerTest extends WP_UnitTestCase {
 	 * @return void
 	 */
 	public function test_merge_stored_transients_option_values() {
-		$test_no_old_value = $this->transient_cleaner->merge_stored_transients_option_values( 'foo', false );
-		$test_old_value    = $this->transient_cleaner->merge_stored_transients_option_values( 'foo', 'foo_old' );
-		$test_merge_values = $this->transient_cleaner->merge_stored_transients_option_values( array( 'foo' ), array( 'foo_old' ) );
+		$test_no_old_value                = $this->transient_cleaner->merge_stored_transients_option_values( 'foo', false );
+		$test_old_value                   = $this->transient_cleaner->merge_stored_transients_option_values( 'foo', 'foo_old' );
+		$test_merge_values                = $this->transient_cleaner->merge_stored_transients_option_values( array( 'foo' ), array( 'foo_old' ) );
 		$test_merge_values_already_exists = $this->transient_cleaner->merge_stored_transients_option_values( array( 'foo' ), array( 'foo_old', 'foo' ) );
 
 		$this->assertEquals( 'foo', $test_no_old_value );
@@ -121,9 +121,7 @@ class TransientCleanerTest extends WP_UnitTestCase {
 	 * @return void
 	 */
 	public function test_post_transient_cleaner() {
-		$post            = new \stdClass();
-		$post->post_type = 'post';
-
+		$post         = $this->factory->post->create_and_get();
 		$test_success = $this->transient_cleaner->post_transient_cleaner( 1, $post );
 
 		$config_1 = $this->transient_cleaner->get_config();
