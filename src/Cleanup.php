@@ -84,15 +84,19 @@ class Cleanup {
 	}
 
 	/**
-	 * Suppress version number in enqued css & js files
+	 * Suppress version number in enqued css & js files.
+	 * Except for themes assets where version isn't a security breach.
+	 *
+	 * @see Studiometa\WP\Assets::register()
 	 *
 	 * @param  string $src The source path of the asset.
 	 * @return string
 	 */
 	public function remove_version_css_js( string $src ):string {
-		if ( strpos( $src, 'ver=' ) ) {
+		if ( strpos( $src, 'ver=' ) && false === strpos( $src, content_url( 'themes' ) ) ) {
 			$src = remove_query_arg( 'ver', $src );
 		}
+
 		return $src;
 	}
 
