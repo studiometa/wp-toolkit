@@ -18,6 +18,7 @@ use Studiometa\WPToolkit\Managers\ManagerInterface;
  * Cleanup a WordPress project for security and performance.
  */
 class CleanupManager implements ManagerInterface {
+	// phpcs:ignore Generic.Commenting.DocComment.MissingShort
 	/**
 	 * @inheritdoc
 	 */
