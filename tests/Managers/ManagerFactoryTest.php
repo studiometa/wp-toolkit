@@ -12,7 +12,15 @@ class Manager implements ManagerInterface {
 	}
 }
 
+/**
+ * ManagerFactoryTest test case.
+ */
 class ManagerFactoryTest extends WP_UnitTestCase {
+	/**
+	 * Has dummy manager has be run?
+	 *
+	 * @var boolean
+	 */
 	public static $has_run = false;
 
 	/**
