@@ -108,4 +108,13 @@ $transient_cleaner = TransientCleaner::get_instance(
 $transient_cleaner->set_config(array());
 
 // 3. Insert/Update post/term/option to see your transients deleted based on your config.
-``` 
+```
+
+## Contribute
+### Run tests
+#### PHPUnit
+```bash
+# WP-tests must be installed before run PHPUnit (required a test MySQL database).
+./bin/install-wp-tests.sh [dbname] [dbuser] [dbpasswd] [dbhost] [test_version]
+composer run-script phpunit
+```
