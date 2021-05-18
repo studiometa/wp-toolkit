@@ -3,7 +3,7 @@
  * Utilities to configure custom post types.
  *
  * @package    studiometa/wp-toolkit
- * @author     Lucas Simeon <lucas.s@studiometa.fr>
+ * @author     Studio Meta <agence@studiometa.fr>
  * @copyright  2020 Studio Meta
  * @license    https://opensource.org/licenses/MIT
  * @since      1.0.0

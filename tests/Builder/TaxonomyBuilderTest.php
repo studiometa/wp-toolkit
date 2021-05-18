@@ -2,43 +2,55 @@
 
 use Studiometa\WPToolkit\Builders\TaxonomyBuilder;
 
-it(
-	'should register a custom taxonomy',
-	function() {
-		( new TaxonomyBuilder( 'category' ) )
-		->set_post_types( 'post' )
-		->set_labels( 'Category', 'Categories' )
-		->register();
+/**
+ * TaxonomyBuilder test case.
+ */
+class TaxonomyBuilderTest extends WP_UnitTestCase {
+	/**
+	 * Store a TaxonomyBuilder instance.
+	 */
+	public function setUp() {
+		parent::setUp();
 
-		expect( $this->type )->toBe( 'category' );
-		expect( $this->post_types )->toBe( 'post' );
-		expect( $this->config )->toEqual(
-			array(
-				'query_var'         => 1,
-				'show_ui'           => 1,
-				'show_admin_column' => 1,
-				'show_in_nav_menus' => 1,
-				'show_tagcloud'     => 1,
-				'labels'            => array(
-					'name'                  => 'Categories',
-					'singular_name'         => 'Category',
-					'add_new_item'          => 'Add New Category',
-					'all_items'             => 'All Categories',
-					'choose_from_most_used' => 'Most used',
-					'edit_item'             => 'Edit Category',
-					'items_list'            => 'Categories list',
-					'items_list_navigation' => 'Categories list navigation',
-					'menu_name'             => 'Categories',
-					'new_item_name'         => 'New Category',
-					'no_terms'              => 'No Category',
-					'parent_item'           => 'Category parent',
-					'parent_item_colon'     => '',
-					'popular_items'         => 'Popular Category',
-					'search_items'          => 'Search Categories',
-					'update_item'           => 'Update the Category',
-					'view_item'             => 'View Category',
-				),
-			)
-		);
+		$this->taxonomy_builder = new TaxonomyBuilder( 'category' );
 	}
-);
+
+	/**
+	 * Test register function.
+	 *
+	 * @return void
+	 */
+	public function test_taxonomy_builder_register() {
+		$this->taxonomy_builder->register();
+
+		$this->assertTrue( taxonomy_exists( 'category' ) );
+	}
+
+	/**
+	 * Test set_labels function.
+	 *
+	 * @return void
+	 */
+	public function test_taxonomy_builder_set_labels() {
+		$this->taxonomy_builder->set_labels( 'Category', 'Categories' );
+
+		$config = $this->taxonomy_builder->get_config();
+
+		$this->assertTrue( isset( $config['labels'] ) );
+		$this->assertEquals( 'Category', $config['labels']['singular_name'] );
+		$this->assertEquals( 'Categories', $config['labels']['menu_name'] );
+	}
+
+	/**
+	 * Test set_post_types function.
+	 *
+	 * @return void
+	 */
+	public function test_taxonomy_builder_set_post_types() {
+		$this->taxonomy_builder->set_post_types( 'tag' );
+
+		$post_types = $this->taxonomy_builder->get_post_types();
+
+		$this->assertEquals( 'tag', $post_types );
+	}
+}

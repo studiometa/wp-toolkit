@@ -3,23 +3,26 @@
  * Utilities to clean up a WordPress project.
  *
  * @package    studiometa/wp-toolkit
- * @author     Titouan Mathis <titouan@studiometa.fr>
+ * @author     Studio Meta <agence@studiometa.fr>
  * @copyright  2020 Studio Meta
  * @license    https://opensource.org/licenses/MIT
  * @since      1.0.0
  * @version    1.0.0
  */
 
-namespace Studiometa\WP;
+namespace Studiometa\WPToolkit\Managers;
+
+use Studiometa\WPToolkit\Managers\ManagerInterface;
 
 /**
  * Cleanup a WordPress project for security and performance.
  */
-class Cleanup {
+class CleanupManager implements ManagerInterface {
+	// phpcs:ignore Generic.Commenting.DocComment.MissingShort
 	/**
-	 * __construct
+	 * @inheritdoc
 	 */
-	public function __construct() {
+	public function run() {
 		// Clean up <head>.
 		add_action( 'init', array( $this, 'cleanup_head' ) );
 
@@ -84,15 +87,19 @@ class Cleanup {
 	}
 
 	/**
-	 * Suppress version number in enqued css & js files
+	 * Suppress version number in enqued css & js files.
+	 * Except for themes assets where version isn't a security breach.
+	 *
+	 * @see Studiometa\WP\Assets::register()
 	 *
 	 * @param  string $src The source path of the asset.
 	 * @return string
 	 */
 	public function remove_version_css_js( string $src ):string {
-		if ( strpos( $src, 'ver=' ) ) {
+		if ( strpos( $src, 'ver=' ) && false === strpos( $src, content_url( 'themes' ) ) ) {
 			$src = remove_query_arg( 'ver', $src );
 		}
+
 		return $src;
 	}
 
