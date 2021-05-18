@@ -1,15 +1,15 @@
 <?php
 
-use Studiometa\WPToolkit\Cleanup;
+use Studiometa\WPToolkit\Managers\CleanupManager;
 
 /**
- * CleanupTest test case.
+ * CleanupManagerTest test case.
  */
-class CleanupTest extends WP_UnitTestCase {
+class CleanupManagerTest extends WP_UnitTestCase {
 	public function setUp() {
 		parent::setUp();
 
-		$this->cleanup = new Cleanup();
+		$this->cleanup_manager = new CleanupManager();
 	}
 
 	/**
@@ -22,8 +22,8 @@ class CleanupTest extends WP_UnitTestCase {
 		$theme_src  = $themes_uri . '/example/example.js?ver=2.0.0';
 		$other_src  = 'https://example.org/example.js?ver=2.0.0';
 
-		$updated_theme_src = $this->cleanup->remove_version_css_js( $theme_src );
-		$updated_other_src = $this->cleanup->remove_version_css_js( $other_src );
+		$updated_theme_src = $this->cleanup_manager->remove_version_css_js( $theme_src );
+		$updated_other_src = $this->cleanup_manager->remove_version_css_js( $other_src );
 
 		$this->assertFalse( strpos( $updated_other_src, 'ver=' ) );
 		$this->assertNotFalse( strpos( $updated_theme_src, 'ver=' ) );

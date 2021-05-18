@@ -26,6 +26,7 @@ class AssetsManager implements ManagerInterface {
 	 */
 	public $config;
 
+	// phpcs:ignore Generic.Commenting.DocComment.MissingShort
 	/**
 	 * @inheritdoc
 	 */
