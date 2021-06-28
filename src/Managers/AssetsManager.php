@@ -26,25 +26,39 @@ class AssetsManager implements ManagerInterface {
 	 */
 	public $config;
 
+	/**
+	 * Configuration filepath.
+	 *
+	 * @var string
+	 */
+	private $configuration_filepath;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param string|null $configuration_filepath Configuration filepath.
+	 */
+	public function __construct( ?string $configuration_filepath = null ) {
+		$this->configuration_filepath = get_template_directory() . '/config/assets.yml';
+
+		if ( isset( $configuration_filepath ) ) {
+			$this->configuration_filepath = $configuration_filepath;
+		}
+	}
+
 	// phpcs:ignore Generic.Commenting.DocComment.MissingShort
 	/**
 	 * @inheritdoc
 	 */
 	public function run() {
-		$config_path = get_template_directory() . '/assets.yml';
-
-		if ( ! file_exists( $config_path ) ) {
-			$config_path = get_template_directory() . '/assets.yaml';
-
-			if ( ! file_exists( $config_path ) ) {
-				$msg = "No assets config file found. Try adding an `assets.yml` file in 'get_template_directory()'.";
-				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
-				trigger_error( esc_html( $msg ), E_USER_NOTICE );
-				return;
-			}
+		if ( ! file_exists( $this->configuration_filepath ) ) {
+			$msg = 'No assets configuration file found.';
+			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+			trigger_error( esc_html( $msg ), E_USER_NOTICE );
+			return;
 		}
 
-		$this->config = Yaml::parseFile( $config_path );
+		$this->config = Yaml::parseFile( $this->configuration_filepath );
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_all' ) );
 		add_filter( 'template_include', array( $this, 'enqueue_all' ) );
