@@ -1,6 +1,6 @@
 {
   "name": "studiometa/wp-toolkit",
-  "version": "1.0.0-alpha4",
+  "version": "1.0.0-alpha5",
   "description": "WordPress utilities for Studio Meta.",
   "license": "MIT",
   "type": "library",
@@ -14,8 +14,7 @@
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7.0",
     "szepeviktor/phpstan-wordpress": "^0.7.1",
     "php-stubs/wordpress-stubs": "^5.5",
-    "phpunit/phpunit": "^7.0",
-    "phpstan/extension-installer": "^1.1"
+    "phpunit/phpunit": "^7.0"
   },
   "autoload": {
     "psr-4": {
