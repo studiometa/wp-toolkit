@@ -64,6 +64,27 @@ ManagerFactory::init(
 );
 ```
 
+## AssetsManager
+
+The `AssetsManager` manager does the heavy lifting of registering and enqueuing assets for you. It works with a configuration file in YAML with the following format:
+
+```yaml
+<template-name-or-all>:
+  css:
+    <asset-id>: <asset-path-in-theme>
+  js:
+    <asset-id>: <asset-path-in-theme>
+```
+
+If used with our [Webpack configuration package](https://github.com/studiometa/webpack-config), you can also specify entrypoints and all their dependencies to be registered and enqueued. 
+
+```yaml
+all:
+  entries:
+    - css/app.scss
+    - js/app.js
+```
+
 ## Transient Cleaner
 ### Usage
 > **Important** Transients keys must be prefixed with transient cleaner prefix (`TransientCleaner::PREFIX`) to be tracked.

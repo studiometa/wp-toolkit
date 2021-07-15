@@ -14,6 +14,7 @@ namespace Studiometa\WPToolkit\Managers;
 
 use Studiometa\WPToolkit\Managers\ManagerInterface;
 use Symfony\Component\Yaml\Yaml;
+use Studiometa\WebpackConfig\Manifest;
 
 /**
  * Helper class to manage a theme's assets.
@@ -27,6 +28,13 @@ class AssetsManager implements ManagerInterface {
 	public $config;
 
 	/**
+	 * The parsed Webpack manifest.
+	 *
+	 * @var Manifest
+	 */
+	private $webpack_manifest;
+
+	/**
 	 * Configuration filepath.
 	 *
 	 * @var string
@@ -34,15 +42,27 @@ class AssetsManager implements ManagerInterface {
 	private $configuration_filepath;
 
 	/**
+	 * Webpack manifest filepath.
+	 *
+	 * @var string
+	 */
+	private $webpack_manifest_filepath;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param string|null $configuration_filepath Configuration filepath.
 	 */
-	public function __construct( ?string $configuration_filepath = null ) {
+	public function __construct( ?string $configuration_filepath = null, ?string $webpack_manifest_filepath = null ) {
 		$this->configuration_filepath = get_template_directory() . '/config/assets.yml';
+		$this->webpack_manifest_filepath = get_template_directory() . '/dist/assets-manifest.json';
 
 		if ( isset( $configuration_filepath ) ) {
 			$this->configuration_filepath = $configuration_filepath;
+		}
+
+		if ( isset( $webpack_manifest_filepath ) ) {
+			$this->webpack_manifest_filepath = $webpack_manifest_filepath;
 		}
 	}
 
@@ -60,8 +80,29 @@ class AssetsManager implements ManagerInterface {
 
 		$this->config = Yaml::parseFile( $this->configuration_filepath );
 
+		if ( $this->webpack_manifest_filepath ) {
+			if ( ! file_exists( $this->webpack_manifest_filepath ) ) {
+				$msg = sprintf( 'No webpack manifest file found in `%s`.', $this->webpack_manifest_filepath );
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+				trigger_error( esc_html( $msg ), E_USER_NOTICE );
+				return;
+			}
+			$this->webpack_manifest = new Manifest( $this->webpack_manifest_filepath, dirname( $this->$this->webpack_manifest_filepath ) );
+		}
+
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_all' ) );
 		add_filter( 'template_include', array( $this, 'enqueue_all' ) );
+	}
+
+	/**
+	 * Get an asset's path relative to the webpack manifest file.
+	 *
+	 * @param string $path The asset's path.
+	 * @return string
+	 */
+	private function get_assets_path_relative_to_webpack_manifest( string $path ) :string {
+		$webpack_manifest_directory_in_theme = str_replace( get_template_directory() . '/', '', dirname( $this->webpack_manifest_filepath) ) . '/';
+		return str_replace( $webpack_manifest_directory_in_theme, '', $path );
 	}
 
 	/**
@@ -72,6 +113,30 @@ class AssetsManager implements ManagerInterface {
 	 */
 	public function register_all() {
 		foreach ( $this->config as $name => $config ) {
+			if ( isset( $config['entries'] ) && is_array( $config['entries'] ) ) {
+				foreach ( $config['entries'] as $entry ) {
+					$pathinfo = pathinfo( $entry );
+					$entry = implode(
+						DIRECTORY_SEPARATOR,
+						array( $pathinfo['dirname'], $pathinfo['filename'] )
+					);
+
+					$webpack_entry = $this->webpack_manifest->entry( $entry );
+
+					if ( ! $webpack_entry ) {
+						continue;
+					}
+
+					$webpack_entry->styles->each( function ( $style, $handle ) {
+						$this->register( 'style', $handle, $style->getAttribute( 'href' ) );
+					});
+
+					$webpack_entry->scripts->each( function ( $script, $handle ) {
+						$this->register( 'script', $handle, $script->getAttribute( 'src' ) );
+					});
+				}
+			}
+
 			if ( isset( $config['css'] ) ) {
 				foreach ( $config['css'] as $handle => $path ) {
 					$this->register( 'style', $handle, $path );
@@ -109,6 +174,30 @@ class AssetsManager implements ManagerInterface {
 			foreach ( $this->config as $name => $config ) {
 				if ( (string) $name !== $potential_name ) {
 					continue;
+				}
+
+				if ( isset( $config['entries'] ) && is_array( $config['entries'] ) ) {
+					foreach ( $config['entries'] as $entry ) {
+						$pathinfo = pathinfo( $entry );
+						$entry = implode(
+							DIRECTORY_SEPARATOR,
+							array( $pathinfo['dirname'], $pathinfo['filename'] )
+						);
+
+						$webpack_entry = $this->webpack_manifest->entry( $entry );
+
+						if ( ! $webpack_entry ) {
+							continue;
+						}
+
+						$webpack_entry->styles->keys()->each( function ( $handle ) {
+							$this->enqueue( 'style', $handle );
+						});
+
+						$webpack_entry->scripts->keys()->each( function ( $handle ) {
+							$this->enqueue( 'script', $handle );
+						});
+					}
 				}
 
 				if ( isset( $config['css'] ) ) {
@@ -178,6 +267,11 @@ class AssetsManager implements ManagerInterface {
 		} else {
 			$media     = 'all';
 			$in_footer = true;
+		}
+
+		// Read path from Webpack manifest if it exists.
+		if ( isset( $this->webpack_manifest ) && $this->webpack_manifest->asset( $path ) ) {
+			$path = sprintf( 'dist/%s', $this->webpack_manifest->asset( $path ) );
 		}
 
 		$public_path = get_template_directory_uri() . '/' . $path;
