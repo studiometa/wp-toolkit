@@ -21,6 +21,8 @@ class PluginHelper {
 	 *
 	 * @param string $filepath Plugin filepath (relative to plugins folder).
 	 *
+	 * @codeCoverageIgnore
+	 *
 	 * @return boolean Is plugin enabled?
 	 */
 	public static function is_plugin_enabled( string $filepath ):bool {
