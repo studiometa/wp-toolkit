@@ -106,6 +106,7 @@ Functions to interact with WordPress behaviour.
 ```php
 use Studiometa\WPToolkit\Helpers\PluginHelper;
 // Check if a specified plugin is enable.
+use Studiometa\WPToolkit\Helpers\PluginHelper;
 PluginHelper::is_plugin_enabled( 'my-plugin/my-plugin.php' );
 ```
 
