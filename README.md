@@ -64,6 +64,17 @@ ManagerFactory::init(
 );
 ```
 
+## Helpers
+
+Functions to interact with WordPress behaviour.
+
+### Plugin helper
+```php
+// Check if a specified plugin is enable.
+use Studiometa\WPToolkit\Helpers\PluginHelper;
+PluginHelper::is_plugin_enabled( 'my-plugin/my-plugin.php' );
+```
+
 ## Transient Cleaner
 ### Usage
 > **Important** Transients keys must be prefixed with transient cleaner prefix (`TransientCleaner::PREFIX`) to be tracked.
