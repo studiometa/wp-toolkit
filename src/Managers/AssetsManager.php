@@ -78,6 +78,7 @@ class AssetsManager implements ManagerInterface {
 			return;
 		}
 
+		// @phpstan-ignore-next-line
 		$this->config = Yaml::parseFile( $this->configuration_filepath );
 
 		if ( $this->webpack_manifest_filepath ) {
@@ -118,7 +119,7 @@ class AssetsManager implements ManagerInterface {
 					$pathinfo = pathinfo( $entry );
 					$entry = implode(
 						DIRECTORY_SEPARATOR,
-						array( $pathinfo['dirname'], $pathinfo['filename'] )
+						array( $pathinfo['dirname'] ?? '', $pathinfo['filename'] )
 					);
 
 					$webpack_entry = $this->webpack_manifest->entry( $entry );
@@ -181,7 +182,7 @@ class AssetsManager implements ManagerInterface {
 						$pathinfo = pathinfo( $entry );
 						$entry = implode(
 							DIRECTORY_SEPARATOR,
-							array( $pathinfo['dirname'], $pathinfo['filename'] )
+							array( $pathinfo['dirname'] ?? '', $pathinfo['filename'] )
 						);
 
 						$webpack_entry = $this->webpack_manifest->entry( $entry );
@@ -270,7 +271,7 @@ class AssetsManager implements ManagerInterface {
 		}
 
 		// Read path from Webpack manifest if it exists.
-		if ( isset( $this->webpack_manifest ) && $this->webpack_manifest->asset( $path ) ) {
+		if ( $this->webpack_manifest instanceof Manifest && $this->webpack_manifest->asset( $path ) ) {
 			$path = sprintf( 'dist/%s', $this->webpack_manifest->asset( $path ) );
 		}
 

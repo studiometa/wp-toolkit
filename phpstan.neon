@@ -1,10 +1,13 @@
 includes:
-    - vendor/szepeviktor/phpstan-wordpress/extension.neon
+  - vendor/szepeviktor/phpstan-wordpress/extension.neon
 
 parameters:
-    level: max
-    inferPrivatePropertyTypeFromConstructor: true
-    checkMissingIterableValueType: false
-    reportUnmatchedIgnoredErrors: false
-    paths:
-        - ./src/
+  level: max
+  inferPrivatePropertyTypeFromConstructor: true
+  checkMissingIterableValueType: false
+  reportUnmatchedIgnoredErrors: false
+  paths:
+      - ./src/
+  ignoreErrors:
+    - message: '#^Parameter \#1 \$value of method\.#'
+      path: ./src/TransientCleaner.php
