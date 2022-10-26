@@ -52,9 +52,10 @@ class AssetsManager implements ManagerInterface {
 	 * Constructor.
 	 *
 	 * @param string|null $configuration_filepath Configuration filepath.
+	 * @param string|null $webpack_manifest_filepath Webpack manifest filepath.
 	 */
 	public function __construct( ?string $configuration_filepath = null, ?string $webpack_manifest_filepath = null ) {
-		$this->configuration_filepath = get_template_directory() . '/config/assets.yml';
+		$this->configuration_filepath    = get_template_directory() . '/config/assets.yml';
 		$this->webpack_manifest_filepath = get_template_directory() . '/dist/assets-manifest.json';
 
 		if ( isset( $configuration_filepath ) ) {
@@ -102,7 +103,7 @@ class AssetsManager implements ManagerInterface {
 	 * @return string
 	 */
 	private function get_assets_path_relative_to_webpack_manifest( string $path ) :string {
-		$webpack_manifest_directory_in_theme = str_replace( get_template_directory() . '/', '', dirname( $this->webpack_manifest_filepath) ) . '/';
+		$webpack_manifest_directory_in_theme = str_replace( get_template_directory() . '/', '', dirname( $this->webpack_manifest_filepath ) ) . '/';
 		return str_replace( $webpack_manifest_directory_in_theme, '', $path );
 	}
 
@@ -117,7 +118,7 @@ class AssetsManager implements ManagerInterface {
 			if ( isset( $config['entries'] ) && is_array( $config['entries'] ) ) {
 				foreach ( $config['entries'] as $entry ) {
 					$pathinfo = pathinfo( $entry );
-					$entry = implode(
+					$entry    = implode(
 						DIRECTORY_SEPARATOR,
 						array( $pathinfo['dirname'] ?? '', $pathinfo['filename'] )
 					);
@@ -128,13 +129,17 @@ class AssetsManager implements ManagerInterface {
 						continue;
 					}
 
-					$webpack_entry->styles->each( function ( $style, $handle ) {
-						$this->register( 'style', $handle, $style->getAttribute( 'href' ) );
-					});
+					$webpack_entry->styles->each(
+						function ( $style, $handle ) {
+							$this->register( 'style', $handle, $style->getAttribute( 'href' ) );
+						}
+					);
 
-					$webpack_entry->scripts->each( function ( $script, $handle ) {
-						$this->register( 'script', $handle, $script->getAttribute( 'src' ) );
-					});
+					$webpack_entry->scripts->each(
+						function ( $script, $handle ) {
+							$this->register( 'script', $handle, $script->getAttribute( 'src' ) );
+						}
+					);
 				}
 			}
 
@@ -180,7 +185,7 @@ class AssetsManager implements ManagerInterface {
 				if ( isset( $config['entries'] ) && is_array( $config['entries'] ) ) {
 					foreach ( $config['entries'] as $entry ) {
 						$pathinfo = pathinfo( $entry );
-						$entry = implode(
+						$entry    = implode(
 							DIRECTORY_SEPARATOR,
 							array( $pathinfo['dirname'] ?? '', $pathinfo['filename'] )
 						);
@@ -191,13 +196,17 @@ class AssetsManager implements ManagerInterface {
 							continue;
 						}
 
-						$webpack_entry->styles->keys()->each( function ( $handle ) {
-							$this->enqueue( 'style', $handle );
-						});
+						$webpack_entry->styles->keys()->each(
+							function ( $handle ) {
+								$this->enqueue( 'style', $handle );
+							}
+						);
 
-						$webpack_entry->scripts->keys()->each( function ( $handle ) {
-							$this->enqueue( 'script', $handle );
-						});
+						$webpack_entry->scripts->keys()->each(
+							function ( $handle ) {
+								$this->enqueue( 'script', $handle );
+							}
+						);
 					}
 				}
 
