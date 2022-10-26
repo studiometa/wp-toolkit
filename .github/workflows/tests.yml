@@ -11,51 +11,69 @@ jobs:
   phpstan:
     name: PHPStan
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions:
+          - '7.3'
+          - '7.4'
+          - '8.0'
+          - '8.1'
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      - uses: php-actions/composer@v5
+      - name: Setup PHP, with composer and xdebug
+        uses: shivammathur/setup-php@v2 #https://github.com/shivammathur/setup-php
         with:
-          php_version: 7.3
+          php-version: ${{ matrix.php-versions }}
+          coverage: xdebug
+
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+      - name: Cache composer dependencies
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install Composer dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: PHPStan
-        uses: docker://oskarstark/phpstan-ga
-        env:
-          REQUIRE_DEV: true
-        with:
-          args: analyse
+        run: ./vendor/bin/phpstan analyse --memory-limit=512M
 
   phpcs:
     name: PHPCS
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      - name: Determine composer cache directory
-        shell: bash
-        run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
-
-      - name: Cache dependencies
+      - name: Cache Composer dependencies
         uses: actions/cache@v2
         with:
-          path: ${{ env.COMPOSER_CACHE_DIR }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
-          restore-keys: ${{ runner.os }}-composer-
+          path: /tmp/composer-cache
+          key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
 
       - uses: php-actions/composer@v5
-        with:
-          php_version: 7.3
 
       - name: PHPCS
-        uses: chekalsky/phpcs-action@v1
-        with:
-          phpcs_bin_path: ./vendor/bin/phpcs
+        run: ./vendor/bin/phpcs
 
   phpunit:
     name: PHPUnit
     runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        php-versions:
+          - '7.3'
+          - '7.4'
+          - '8.0'
+          - '8.1'
 
     services:
       mysql:
@@ -68,31 +86,27 @@ jobs:
           options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      - name: Install dependencies
-        uses: php-actions/composer@v5
+      - name: Setup PHP, with composer and xdebug
+        uses: shivammathur/setup-php@v2 #https://github.com/shivammathur/setup-php
         with:
-          php_version: 7.3
+          php-version: ${{ matrix.php-versions }}
+          coverage: xdebug
 
-      - name: Determine composer cache directory
-        shell: bash
-        run: "echo \"COMPOSER_CACHE_DIR=$(composer config cache-dir)\" >> $GITHUB_ENV"
+      - name: Get composer cache directory
+        id: composer-cache
+        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
 
-      - name: Cache dependencies
+      - name: Cache composer dependencies
         uses: actions/cache@v2
         with:
-          path: ${{ env.COMPOSER_CACHE_DIR }}
-          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.lock') }}
           restore-keys: ${{ runner.os }}-composer-
 
-      # Specify PHP 7.3 version to run PHPUnit and prevent Github action error (PHPUnit 7.* isn't compatible w/ PHP 8.*).
-      - name: Setup PHP 7.3
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: '7.3'
-          coverage: xdebug
+      - name: Install Composer dependencies
+        run: composer install --no-progress --prefer-dist --optimize-autoloader
 
       - name: Clean old WP Tests
         run: mysql --host 127.0.0.1 --port 3306 -uroot -proot -e "DROP DATABASE IF EXISTS wordpress_test;" && rm -fr /tmp/wordpress*
