@@ -13,7 +13,7 @@ class TransientCleanerTest extends WP_UnitTestCase {
 	/**
 	 * Initialize transient cleaner based on config.
 	 */
-	public function setUp() {
+	public function setUp():void {
 		parent::setUp();
 
 		$this->config = array(

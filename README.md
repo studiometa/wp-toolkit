@@ -134,8 +134,18 @@ $transient_cleaner->set_config(array());
 ## Contribute
 ### Run tests
 #### PHPUnit
+
 ```bash
 # WP-tests must be installed before run PHPUnit (required a test MySQL database).
 ./bin/install-wp-tests.sh [dbname] [dbuser] [dbpasswd] [dbhost] [test_version]
 composer run-script phpunit
 ```
+
+Tests can be run in ddev which preconfigures the WordPress environment when starting:
+
+```bash
+ddev start
+ddev exec phpunit
+```
+
+To test against different PHP version, you can edit the `.ddev/config.yaml` file and change the `php_version` property.
