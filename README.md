@@ -85,6 +85,18 @@ all:
     - js/app.js
 ```
 
+```php
+new AssetsManager(
+  get_template_directory() . '/config/assets.yml',
+  get_template_directory() . '/dist/assets-manifest.json',
+);
+```
+
+### Parameters
+
+- `$configuration_filepath` (`string`): path to the `config.yml` file, defaults to `config/assets.yml` in your theme.
+- `$webpack_manifest_filepath` (`string`), path to the Webpack assets manifest file, defaults to `dist/assets-manifest.json` in your theme.
+
 ## Transient Cleaner
 ### Usage
 > **Important** Transients keys must be prefixed with transient cleaner prefix (`TransientCleaner::PREFIX`) to be tracked.
