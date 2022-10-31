@@ -1,0 +1,10 @@
+all:
+  entries:
+    - css/app.scss
+    - js/app.js
+  css:
+    editor: dist/editor.css
+
+single-post:
+  css:
+    post: dist/post.css
