@@ -15,6 +15,7 @@ class AssetsManagerTest extends WP_UnitTestCase {
 		$this->theme_path = realpath( get_template_directory() );
 		$this->stubs_path = realpath( __DIR__ . '/__stubs__/theme/' );
 
+		// phpcs:ignore
 		exec( sprintf( 'rsync -avh %s %s', $this->stubs_path . '/', $this->theme_path . '/' ) );
 		$this->assets_manager->run();
 	}
@@ -27,22 +28,22 @@ class AssetsManagerTest extends WP_UnitTestCase {
 	public function test_configs_are_read() {
 		$this->assertEqualSets(
 			$this->assets_manager->config,
-			[
-				'all' => [
-					'entries' => [
+			array(
+				'all'  => array(
+					'entries' => array(
 						'css/app.scss',
 						'js/app.js',
-					],
-					'css' => [
-						'editor' => 'dist/editor.css'
-					]
-				],
-				'post' => [
-					'css' => [
+					),
+					'css'     => array(
+						'editor' => 'dist/editor.css',
+					),
+				),
+				'post' => array(
+					'css' => array(
 						'post' => 'dist/post.css',
-					]
-				],
-			]
+					),
+				),
+			)
 		);
 
 		$this->assertTrue(
@@ -69,21 +70,19 @@ class AssetsManagerTest extends WP_UnitTestCase {
 		apply_filters( 'template_include', 'frontpage' );
 		do_action( 'wp_enqueue_scripts' );
 
-		$this->assertTrue( in_array( 'theme-styles-1234-css', wp_styles()->queue ) );
-		$this->assertTrue( in_array( 'theme-editor', wp_styles()->queue ) );
-		$this->assertFalse( in_array( 'theme-post', wp_styles()->queue ) );
+		$this->assertTrue( in_array( 'theme-styles-1234-css', wp_styles()->queue, true ) );
+		$this->assertTrue( in_array( 'theme-editor', wp_styles()->queue, true ) );
+		$this->assertFalse( in_array( 'theme-post', wp_styles()->queue, true ) );
 
-		$this->assertTrue( in_array( 'theme-app-1234-js', wp_scripts()->queue ) );
+		$this->assertTrue( in_array( 'theme-app-1234-js', wp_scripts()->queue, true ) );
 	}
 
 	public function test_entries_are_enqueued_by_template() {
 		apply_filters( 'template_include', 'single-post.php' );
 		do_action( 'wp_enqueue_scripts' );
 
-		var_dump(wp_styles()->queue);
-
-		$this->assertTrue( in_array( 'theme-styles-1234-css', wp_styles()->queue ) );
-		$this->assertTrue( in_array( 'theme-editor', wp_styles()->queue ) );
-		$this->assertTrue( in_array( 'theme-post', wp_styles()->queue ) );
+		$this->assertTrue( in_array( 'theme-styles-1234-css', wp_styles()->queue, true ) );
+		$this->assertTrue( in_array( 'theme-editor', wp_styles()->queue, true ) );
+		$this->assertTrue( in_array( 'theme-post', wp_styles()->queue, true ) );
 	}
 }

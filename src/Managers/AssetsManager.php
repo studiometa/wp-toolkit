@@ -102,10 +102,11 @@ class AssetsManager implements ManagerInterface {
 
 	/**
 	 * Get Webpack dist folder relative to the theme.
+	 *
 	 * @returns string
 	 */
 	private function get_webpack_public_path_relative_to_theme():string {
-		return trim( str_replace( get_template_directory(), '', dirname( $this->webpack_manifest_filepath ) ), '/') . '/';
+		return trim( str_replace( get_template_directory(), '', dirname( $this->webpack_manifest_filepath ) ), '/' ) . '/';
 	}
 
 	/**
@@ -175,7 +176,7 @@ class AssetsManager implements ManagerInterface {
 	 * @return string           The template path.
 	 */
 	public function enqueue_all( $template ) {
-		$potential_names  = ['all'] + $this->get_potential_names( $template );
+		$potential_names = array( 'all' ) + $this->get_potential_names( $template );
 
 		foreach ( $potential_names as $potential_name ) {
 			foreach ( $this->config as $name => $config ) {
@@ -294,7 +295,7 @@ class AssetsManager implements ManagerInterface {
 		$public_uri = get_template_directory_uri() . '/' . $path;
 
 		$hash = null;
-		if (file_exists( $full_path ) ) {
+		if ( file_exists( $full_path ) ) {
 			$hash = md5_file( $full_path );
 		}
 
@@ -341,7 +342,8 @@ class AssetsManager implements ManagerInterface {
 
 	/**
 	 * Prefix all handles with `theme-`.
-	 * @param  string $handle
+	 *
+	 * @param  string $handle The handle to format.
 	 * @return string
 	 */
 	protected function format_handle( string $handle ):string {
