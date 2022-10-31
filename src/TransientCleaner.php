@@ -46,6 +46,7 @@ class TransientCleaner {
 	 * @param array $config Configuration.
 	 */
 	public function __construct( array $config = array() ) {
+		// @phpstan-ignore-next-line
 		$this->set_stored_transients( get_option( self::OPTION_STORED_TRANSIENTS ) );
 		$this->set_config( $config );
 		$this->define_public_hooks();

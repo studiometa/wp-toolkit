@@ -9,7 +9,7 @@ class TaxonomyBuilderTest extends WP_UnitTestCase {
 	/**
 	 * Store a TaxonomyBuilder instance.
 	 */
-	public function setUp() {
+	public function setUp():void {
 		parent::setUp();
 
 		$this->taxonomy_builder = new TaxonomyBuilder( 'category' );

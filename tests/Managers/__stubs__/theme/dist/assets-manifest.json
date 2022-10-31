@@ -1,0 +1,18 @@
+{
+  "styles.css": "styles.1234.css",
+  "editor.css": "editor.1234.css",
+  "post.css": "post.1234.css",
+  "app.js": "app.1234.js",
+  "entrypoints": {
+    "css/app": {
+      "assets": {
+        "css": ["styles.1234.css"]
+      }
+    },
+    "js/app": {
+      "assets": {
+        "js": ["app.1234.js"]
+      }
+    }
+  }
+}

@@ -6,7 +6,7 @@ use Studiometa\WPToolkit\Managers\CleanupManager;
  * CleanupManagerTest test case.
  */
 class CleanupManagerTest extends WP_UnitTestCase {
-	public function setUp() {
+	public function setUp():void {
 		parent::setUp();
 
 		$this->cleanup_manager = new CleanupManager();
