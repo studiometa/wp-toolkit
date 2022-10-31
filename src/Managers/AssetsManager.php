@@ -32,7 +32,7 @@ class AssetsManager implements ManagerInterface {
 	 *
 	 * @var Manifest
 	 */
-	private $webpack_manifest;
+	public $webpack_manifest;
 
 	/**
 	 * Configuration filepath.
@@ -89,7 +89,11 @@ class AssetsManager implements ManagerInterface {
 				trigger_error( esc_html( $msg ), E_USER_NOTICE );
 				return;
 			}
-			$this->webpack_manifest = new Manifest( $this->webpack_manifest_filepath, dirname( $this->$this->webpack_manifest_filepath ) );
+
+			$this->webpack_manifest = new Manifest(
+				$this->webpack_manifest_filepath,
+				$this->get_webpack_public_path_relative_to_theme()
+			);
 		}
 
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_all' ) );
@@ -97,14 +101,11 @@ class AssetsManager implements ManagerInterface {
 	}
 
 	/**
-	 * Get an asset's path relative to the webpack manifest file.
-	 *
-	 * @param string $path The asset's path.
-	 * @return string
+	 * Get Webpack dist folder relative to the theme.
+	 * @returns string
 	 */
-	private function get_assets_path_relative_to_webpack_manifest( string $path ) :string {
-		$webpack_manifest_directory_in_theme = str_replace( get_template_directory() . '/', '', dirname( $this->webpack_manifest_filepath ) ) . '/';
-		return str_replace( $webpack_manifest_directory_in_theme, '', $path );
+	private function get_webpack_public_path_relative_to_theme():string {
+		return trim( str_replace( get_template_directory(), '', dirname( $this->webpack_manifest_filepath ) ), '/') . '/';
 	}
 
 	/**
@@ -174,7 +175,7 @@ class AssetsManager implements ManagerInterface {
 	 * @return string           The template path.
 	 */
 	public function enqueue_all( $template ) {
-		$potential_names = $this->get_potential_names( $template );
+		$potential_names  = ['all'] + $this->get_potential_names( $template );
 
 		foreach ( $potential_names as $potential_name ) {
 			foreach ( $this->config as $name => $config ) {
@@ -269,6 +270,8 @@ class AssetsManager implements ManagerInterface {
 	 * @return void
 	 */
 	protected function register( string $type, string $handle, $path ):void {
+		$handle = $this->format_handle( $handle );
+
 		if ( is_array( $path ) ) {
 			$_path     = $path;
 			$path      = $_path['path'];
@@ -279,25 +282,26 @@ class AssetsManager implements ManagerInterface {
 			$in_footer = true;
 		}
 
+		$webpack_path = str_replace( $this->get_webpack_public_path_relative_to_theme(), '', $path );
+
 		// Read path from Webpack manifest if it exists.
-		if ( $this->webpack_manifest instanceof Manifest && $this->webpack_manifest->asset( $path ) ) {
-			$path = sprintf( 'dist/%s', $this->webpack_manifest->asset( $path ) );
+		if ( $this->webpack_manifest instanceof Manifest && $this->webpack_manifest->asset( $webpack_path ) ) {
+			$path = $this->webpack_manifest->asset( $webpack_path );
 		}
 
-		$public_path = get_template_directory_uri() . '/' . $path;
+		$path       = trim( $path, '/' );
+		$full_path  = get_template_directory() . '/' . $path;
+		$public_uri = get_template_directory_uri() . '/' . $path;
 
-		if ( ! file_exists( get_template_directory() . '/' . $path ) ) {
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
-			trigger_error( esc_html( "The asset file '$path' does not exist." ), E_USER_NOTICE );
-			return;
+		$hash = null;
+		if (file_exists( $full_path ) ) {
+			$hash = md5_file( $full_path );
 		}
-
-		$hash = md5_file( get_template_directory() . '/' . $path );
 
 		if ( 'style' === $type ) {
 			wp_register_style(
 				$handle,
-				$public_path,
+				$public_uri,
 				array(),
 				$hash,
 				$media
@@ -305,7 +309,7 @@ class AssetsManager implements ManagerInterface {
 		} else {
 			wp_register_script(
 				$handle,
-				$public_path,
+				$public_uri,
 				array(),
 				$hash,
 				$in_footer
@@ -321,6 +325,8 @@ class AssetsManager implements ManagerInterface {
 	 * @return void
 	 */
 	protected function enqueue( $type, $handle ) {
+		$handle = $this->format_handle( $handle );
+
 		add_action(
 			'wp_enqueue_scripts',
 			function () use ( $type, $handle ) {
@@ -331,5 +337,14 @@ class AssetsManager implements ManagerInterface {
 				}
 			}
 		);
+	}
+
+	/**
+	 * Prefix all handles with `theme-`.
+	 * @param  string $handle
+	 * @return string
+	 */
+	protected function format_handle( string $handle ):string {
+		return 'theme-' . str_replace( '.', '-', $handle );
 	}
 }
