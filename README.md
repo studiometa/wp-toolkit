@@ -8,7 +8,7 @@
 
 ## Installation
 
-Install the package via Composer: 
+Install the package via Composer:
 
 ```bash
 composer require studiometa/wp-toolkit
@@ -76,7 +76,7 @@ The `AssetsManager` manager does the heavy lifting of registering and enqueuing 
     <asset-id>: <asset-path-in-theme>
 ```
 
-If used with our [Webpack configuration package](https://github.com/studiometa/webpack-config), you can also specify entrypoints and all their dependencies to be registered and enqueued. 
+If used with our [Webpack configuration package](https://github.com/studiometa/webpack-config), you can also specify entrypoints and all their dependencies to be registered and enqueued.
 
 ```yaml
 all:
@@ -97,8 +97,23 @@ new AssetsManager(
 - `$configuration_filepath` (`string`): path to the `config.yml` file, defaults to `config/assets.yml` in your theme.
 - `$webpack_manifest_filepath` (`string`), path to the Webpack assets manifest file, defaults to `dist/assets-manifest.json` in your theme.
 
+## Helpers
+
+Functions to interact with WordPress behaviour.
+
+### Plugin helper
+
+```php
+use Studiometa\WPToolkit\Helpers\PluginHelper;
+// Check if a specified plugin is enable.
+use Studiometa\WPToolkit\Helpers\PluginHelper;
+PluginHelper::is_plugin_enabled( 'my-plugin/my-plugin.php' );
+```
+
 ## Transient Cleaner
+
 ### Usage
+
 > **Important** Transients keys must be prefixed with transient cleaner prefix (`TransientCleaner::PREFIX`) to be tracked.
 
 ```php
@@ -144,7 +159,9 @@ $transient_cleaner->set_config(array());
 ```
 
 ## Contribute
+
 ### Run tests
+
 #### PHPUnit
 
 ```bash
