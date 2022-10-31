@@ -8,7 +8,7 @@
 
 ## Installation
 
-Install the package via Composer: 
+Install the package via Composer:
 
 ```bash
 composer require studiometa/wp-toolkit
@@ -64,8 +64,56 @@ ManagerFactory::init(
 );
 ```
 
+## AssetsManager
+
+The `AssetsManager` manager does the heavy lifting of registering and enqueuing assets for you. It works with a configuration file in YAML with the following format:
+
+```yaml
+<template-name-or-all>:
+  css:
+    <asset-id>: <asset-path-in-theme>
+  js:
+    <asset-id>: <asset-path-in-theme>
+```
+
+If used with our [Webpack configuration package](https://github.com/studiometa/webpack-config), you can also specify entrypoints and all their dependencies to be registered and enqueued.
+
+```yaml
+all:
+  entries:
+    - css/app.scss
+    - js/app.js
+```
+
+```php
+new AssetsManager(
+  get_template_directory() . '/config/assets.yml',
+  get_template_directory() . '/dist/assets-manifest.json',
+);
+```
+
+### Parameters
+
+- `$configuration_filepath` (`string`): path to the `config.yml` file, defaults to `config/assets.yml` in your theme.
+- `$webpack_manifest_filepath` (`string`), path to the Webpack assets manifest file, defaults to `dist/assets-manifest.json` in your theme.
+
+## Helpers
+
+Functions to interact with WordPress behaviour.
+
+### Plugin helper
+
+```php
+use Studiometa\WPToolkit\Helpers\PluginHelper;
+// Check if a specified plugin is enable.
+use Studiometa\WPToolkit\Helpers\PluginHelper;
+PluginHelper::is_plugin_enabled( 'my-plugin/my-plugin.php' );
+```
+
 ## Transient Cleaner
+
 ### Usage
+
 > **Important** Transients keys must be prefixed with transient cleaner prefix (`TransientCleaner::PREFIX`) to be tracked.
 
 ```php
@@ -111,10 +159,22 @@ $transient_cleaner->set_config(array());
 ```
 
 ## Contribute
+
 ### Run tests
+
 #### PHPUnit
+
 ```bash
 # WP-tests must be installed before run PHPUnit (required a test MySQL database).
 ./bin/install-wp-tests.sh [dbname] [dbuser] [dbpasswd] [dbhost] [test_version]
 composer run-script phpunit
 ```
+
+Tests can be run in ddev which preconfigures the WordPress environment when starting:
+
+```bash
+ddev start
+ddev exec phpunit
+```
+
+To test against different PHP version, you can edit the `.ddev/config.yaml` file and change the `php_version` property.

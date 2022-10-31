@@ -9,7 +9,7 @@ class PostTypeBuilderTest extends WP_UnitTestCase {
 	/**
 	 * Store a PostTypeBuilder instance.
 	 */
-	public function setUp() {
+	public function setUp():void {
 		parent::setUp();
 
 		$this->post_type_builder = new PostTypeBuilder( 'product' );
