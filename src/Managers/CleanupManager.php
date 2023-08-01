@@ -18,9 +18,24 @@ use Studiometa\WPToolkit\Managers\ManagerInterface;
  * Cleanup a WordPress project for security and performance.
  */
 class CleanupManager implements ManagerInterface {
-	// phpcs:ignore Generic.Commenting.DocComment.MissingShort
 	/**
-	 * @inheritdoc
+	 * Wether to enable XML RPC endpoint or not.
+	 *
+	 * @var bool
+	 */
+	protected $xml_rpc;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param bool $xml_rpc Enable or disable XML RPC.
+	 */
+	public function __construct( bool $xml_rpc = false ) {
+		$this->xml_rpc = $xml_rpc;
+	}
+
+	/**
+	 * {@inheritdoc}
 	 */
 	public function run() {
 		// Clean up <head>.
@@ -47,6 +62,8 @@ class CleanupManager implements ManagerInterface {
 
 		// Remove comments from the admin menu.
 		add_action( 'admin_menu', array( $this, 'remove_comments_from_admin_menu' ) );
+
+		add_filter( 'xmlrpc_enabled', array( $this, 'xmlrpc_enabled' ) );
 	}
 
 	/**
@@ -151,5 +168,12 @@ class CleanupManager implements ManagerInterface {
 	public function remove_comments_from_admin_menu():void {
 		// Remove comments admin menu item.
 		remove_menu_page( 'edit-comments.php' );
+	}
+
+	/**
+	 * Enable or disable XML RPC endpoint.
+	 */
+	public function xmlrpc_enabled():bool {
+		return $this->xml_rpc;
 	}
 }
