@@ -6,6 +6,14 @@ use Studiometa\WPToolkit\Managers\CleanupManager;
  * CleanupManagerTest test case.
  */
 class CleanupManagerTest extends WP_UnitTestCase {
+
+	/**
+	 * CleanupManager.
+	 *
+	 * @var CleanupManager
+	 */
+	public $cleanup_manager;
+
 	public function setUp():void {
 		parent::setUp();
 
@@ -27,5 +35,15 @@ class CleanupManagerTest extends WP_UnitTestCase {
 
 		$this->assertFalse( strpos( $updated_other_src, 'ver=' ) );
 		$this->assertNotFalse( strpos( $updated_theme_src, 'ver=' ) );
+	}
+
+	/**
+	 * Test disable XML RPC.
+	 *
+	 * @return void
+	 */
+	public function test_xml_rpc_disabled() {
+		$this->cleanup_manager->run();
+		$this->assertFalse( apply_filters( 'xmlrpc_enabled', true ) );
 	}
 }
