@@ -1,4 +1,13 @@
 <?php
+/**
+ * Helper functions.
+ *
+ * @package    studiometa/wp-toolkit
+ * @author     Studio Meta <agence@studiometa.fr>
+ * @copyright  2023 Studio Meta
+ * @license    https://opensource.org/licenses/MIT
+ * @since      1.1.0
+ */
 
 namespace Studiometa\WPToolkit;
 
@@ -8,6 +17,7 @@ use Studiometa\WPToolkit\Helpers\EnvHelper;
 
 /**
  * Get the Request instance.
+ *
  * @return Request
  */
 function request(): Request {
