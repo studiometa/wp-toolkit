@@ -7,7 +7,6 @@
  * @copyright  2021 Studio Meta
  * @license    https://opensource.org/licenses/MIT
  * @since      1.0.0
- * @version    1.0.0
  */
 
 namespace Studiometa\WPToolkit\Helpers;
