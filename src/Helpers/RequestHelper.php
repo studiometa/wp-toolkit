@@ -33,10 +33,10 @@ class RequestHelper {
 	 * @return Request
 	 */
 	public static function get(): Request {
-		if ( is_null( static::$request ) ) {
-			static::$request = Request::createFromGlobals();
+		if ( is_null( self::$request ) ) {
+			self::$request = Request::createFromGlobals();
 		}
 
-		return static::$request;
+		return self::$request;
 	}
 }
