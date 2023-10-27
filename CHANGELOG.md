@@ -8,4 +8,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- **Helpers:**
+  + Add a `RequestHelper` class 
+  + Add a `request(): Request` function based on [symfony/http-foundation](https://github.com/symfony/http-foundation)
+  + Add an `EnvHelper` class 
+  + Add an `env( string $key ): string` function 
 - **CleanupManager:** Disable XML-RPC by default ([#21](https://github.com/studiometa/wp-toolkit/pull/21))
