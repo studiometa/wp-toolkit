@@ -8,4 +8,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- Add a `Plugin::disable` method to the `Plugin` helper class ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
+- Add a `request` helper function  ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
+- Add a `Request` helper class ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
+- Add a `env` helper function  ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
+- Add a `Env` helper class ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
+
+### Changed
+
+- ⚠️ Rename the `PluginHelper` class to `Plugin` ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
 - **CleanupManager:** Disable XML-RPC by default ([#21](https://github.com/studiometa/wp-toolkit/pull/21))
