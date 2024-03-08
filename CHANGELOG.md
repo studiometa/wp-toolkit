@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- Add an `EmailManager` to configure `PHPMailer` via environment variables ([#22](https://github.com/studiometa/wp-toolkit/pull/22))
 - Add a `Plugin::disable` method to the `Plugin` helper class ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
 - Add a `request` helper function  ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
 - Add a `Request` helper class ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
