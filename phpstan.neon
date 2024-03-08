@@ -3,11 +3,13 @@ includes:
 
 parameters:
   level: max
+  cache:
+    nodesByStringCountMax: 512
   inferPrivatePropertyTypeFromConstructor: true
   checkMissingIterableValueType: false
   reportUnmatchedIgnoredErrors: false
   paths:
       - ./src/
   ignoreErrors:
-    - message: '#^Parameter \#1 \$value of method\.#'
+    - message: '#^Action callback returns bool but should not return anything\.$#'
       path: ./src/TransientCleaner.php
