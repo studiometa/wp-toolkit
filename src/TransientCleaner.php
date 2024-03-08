@@ -202,7 +202,7 @@ class TransientCleaner
      *
      * @return array|bool           New value
      */
-    public function merge_stored_transients_option_values($value, $old_value, $option)
+    public function merge_stored_transients_option_values($value, $old_value, ?string $option = '')
     {
         // Return `$value` if no previous value.
         if (false === $old_value) {
