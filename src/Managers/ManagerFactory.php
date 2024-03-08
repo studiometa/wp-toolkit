@@ -15,16 +15,18 @@ namespace Studiometa\WPToolkit\Managers;
 /**
  * Manager factory class.
  */
-class ManagerFactory {
-	/**
-	 * Run the given managers.
-	 *
-	 * @param ManagerInterface[] $managers A list of manager instances.
-	 * @return void
-	 */
-	public static function init( array $managers ):void {
-		foreach ( $managers as $manager ) {
-			$manager->run();
-		}
-	}
+class ManagerFactory
+{
+    /**
+     * Run the given managers.
+     *
+     * @param ManagerInterface[] $managers A list of manager instances.
+     * @return void
+     */
+    public static function init(array $managers):void
+    {
+        foreach ($managers as $manager) {
+            $manager->run();
+        }
+    }
 }

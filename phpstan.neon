@@ -3,6 +3,8 @@ includes:
 
 parameters:
   level: max
+  cache:
+    nodesByStringCountMax: 512
   inferPrivatePropertyTypeFromConstructor: true
   checkMissingIterableValueType: false
   reportUnmatchedIgnoredErrors: false
