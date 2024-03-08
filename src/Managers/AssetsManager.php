@@ -69,15 +69,14 @@ class AssetsManager implements ManagerInterface
         }
     }
 
-	// phpcs:ignore Generic.Commenting.DocComment.MissingShort
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function run()
     {
         if (! file_exists($this->configuration_filepath)) {
             $msg = 'No assets configuration file found.';
-			// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
             trigger_error(esc_html($msg), E_USER_NOTICE);
             return;
         }
@@ -88,7 +87,7 @@ class AssetsManager implements ManagerInterface
         if ($this->webpack_manifest_filepath) {
             if (! file_exists($this->webpack_manifest_filepath)) {
                 $msg = sprintf('No webpack manifest file found in `%s`.', $this->webpack_manifest_filepath);
-				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
+                // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_trigger_error
                 trigger_error(esc_html($msg), E_USER_NOTICE);
                 return;
             }
@@ -101,6 +100,34 @@ class AssetsManager implements ManagerInterface
 
         add_action('wp_enqueue_scripts', array( $this, 'register_all' ));
         add_filter('template_include', array( $this, 'enqueue_all' ));
+    }
+
+    /**
+     * Enqueue a stylesheet.
+     *
+     * @param  string $handle The handle for this stylesheet.
+     * @param  string $path   The stylesheet path in the theme `src/` folder.
+     *
+     * @return void
+     */
+    public function enqueue_style(string $handle, string $path): void
+    {
+        $this->register('style', $handle, $path);
+        $this->enqueue('style', $handle);
+    }
+
+    /**
+     * Enqueue a script.
+     *
+     * @param  string $handle The handle for this script.
+     * @param  string $path   The stylesheet path in the theme `src/` folder.
+     *
+     * @return void
+     */
+    public function enqueue_script(string $handle, string $path): void
+    {
+        $this->register('script', $handle, $path);
+        $this->enqueue('script', $handle);
     }
 
     /**
@@ -156,7 +183,7 @@ class AssetsManager implements ManagerInterface
 
                     // Enqueue directly if the name of the config is 'all'.
                     if ('all' === $name) {
-                        wp_enqueue_style($handle);
+                        $this->enqueue_in_action('style', $handle);
                     }
                 }
             }
@@ -167,7 +194,7 @@ class AssetsManager implements ManagerInterface
 
                     // Enqueue directly if the name of the config is 'all'.
                     if ('all' === $name) {
-                        wp_enqueue_script($handle);
+                        $this->enqueue_in_action('script', $handle);
                     }
                 }
             }
@@ -206,13 +233,13 @@ class AssetsManager implements ManagerInterface
 
                         $webpack_entry->styles->keys()->each(
                             function ($handle) {
-                                $this->enqueue('style', $handle);
+                                $this->enqueue_in_action('style', $handle);
                             }
                         );
 
                         $webpack_entry->scripts->keys()->each(
                             function ($handle) {
-                                $this->enqueue('script', $handle);
+                                $this->enqueue_in_action('script', $handle);
                             }
                         );
                     }
@@ -220,13 +247,13 @@ class AssetsManager implements ManagerInterface
 
                 if (isset($config['css'])) {
                     foreach ($config['css'] as $handle => $path) {
-                        $this->enqueue('style', $handle);
+                        $this->enqueue_in_action('style', $handle);
                     }
                 }
 
                 if (isset($config['js'])) {
                     foreach ($config['js'] as $handle => $path) {
-                        $this->enqueue('script', $handle);
+                        $this->enqueue_in_action('script', $handle);
                     }
                 }
             }
@@ -327,7 +354,24 @@ class AssetsManager implements ManagerInterface
     }
 
     /**
-     * Enqueue an asset given its handle.
+     * Enqueue an asset given its handle in the `wp_enqueue_scripts` action.
+     *
+     * @param  string $type   The type of the asset: 'style' or 'script'.
+     * @param  string $handle The asset's handle.
+     * @return void
+     */
+    protected function enqueue_in_action($type, $handle)
+    {
+        add_action(
+            'wp_enqueue_scripts',
+            function () use ($type, $handle) {
+                $this->enqueue($type, $handle);
+            }
+        );
+    }
+
+    /**
+     * Enqueue an asset directly given its handle.
      *
      * @param  string $type   The type of the asset: 'style' or 'script'.
      * @param  string $handle The asset's handle.
@@ -337,16 +381,11 @@ class AssetsManager implements ManagerInterface
     {
         $handle = $this->format_handle($handle);
 
-        add_action(
-            'wp_enqueue_scripts',
-            function () use ($type, $handle) {
-                if ('style' === $type) {
-                    wp_enqueue_style($handle);
-                } else {
-                    wp_enqueue_script($handle);
-                }
-            }
-        );
+        if ('style' === $type) {
+            wp_enqueue_style($handle);
+        } else {
+            wp_enqueue_script($handle);
+        }
     }
 
     /**
