@@ -18,3 +18,4 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - ⚠️ Rename the `PluginHelper` class to `Plugin` ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
 - **CleanupManager:** Disable XML-RPC by default ([#21](https://github.com/studiometa/wp-toolkit/pull/21))
+- Remove WordPress Code Standard sniffs for PHPCS ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
