@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## v2.0.1 - 2024.03.09
+
+### Fixed
+
+- Remove some typing that can cause errors at runtime ([6053ce0](https://github.com/studiometa/wp-toolkit/commit/6053ce0))
+
 ## v2.0.0 - 2024.03.08
 
 ### Added
