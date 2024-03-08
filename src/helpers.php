@@ -17,8 +17,9 @@ use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
  * @param  string $key The variable name.
  * @return string
  */
-function env( string $key ): string {
-	return Env::get( $key );
+function env(string $key): string
+{
+    return Env::get($key);
 }
 
 /**
@@ -28,6 +29,7 @@ function env( string $key ): string {
  *
  * @return SymfonyRequest
  */
-function request(): SymfonyRequest {
-	return Request::request();
+function request(): SymfonyRequest
+{
+    return Request::request();
 }

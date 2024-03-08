@@ -15,11 +15,12 @@ namespace Studiometa\WPToolkit\Managers;
 /**
  * Manager interface.
  */
-interface ManagerInterface {
-	/**
-	 * Runs initialization tasks.
-	 *
-	 * @return void
-	 */
-	public function run();
+interface ManagerInterface
+{
+    /**
+     * Runs initialization tasks.
+     *
+     * @return void
+     */
+    public function run();
 }

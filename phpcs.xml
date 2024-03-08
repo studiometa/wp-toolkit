@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
 <ruleset name="studiometa-wp-toolkit">
+  <arg name="extensions" value="php"/>
+  <arg name="colors" />
+  <arg name="cache" />
+  <arg value="sp" />
+
   <!-- Define file and folders to lint -->
   <file>./src/</file>
   <file>./tests/</file>
@@ -7,33 +12,17 @@
   <!-- Don't check composer dependencies -->
   <exclude-pattern>/vendor/</exclude-pattern>
 
-  <!--
-    Ending tags '?>' can be really painful to debug.
-    Just disallow them in the end of the file
-  -->
-  <rule ref="PSR2.Files.ClosingTag.NotAllowed"/>
+  <rule ref="PSR2" />
 
-  <!-- <?php tags and constants (true,false,null) need to be lowercase  -->
-  <rule ref="Generic.PHP.LowerCaseKeyword"/>
-  <rule ref="Generic.PHP.LowerCaseConstant"/>
-
-  <rule ref="WordPress">
-    <!-- There are numerous cases where we want to override WP globals -->
-    <exclude name="WordPress.WP.GlobalVariablesOverride" />
-    <!-- WordPress filenames are not compatible with autoload -->
-    <exclude name="WordPress.Files.FileName.NotHyphenatedLowercase"></exclude>
-    <exclude name="WordPress.Files.FileName.InvalidClassFileName"></exclude>
+  <rule ref="PSR1">
+    <exclude name="PSR1.Methods.CamelCapsMethodName.NotCamelCaps" />
   </rule>
 
-  <rule ref="Squiz.Commenting.FileComment.Missing">
+  <rule ref="PSR1.Methods.CamelCapsMethodName.NotCamelCaps">
     <exclude-pattern>*/tests/*</exclude-pattern>
   </rule>
 
-  <rule ref="Squiz.Commenting.FunctionComment.Missing">
-    <exclude-pattern>*/tests/*</exclude-pattern>
-  </rule>
-
-  <rule ref="Generic.Files.OneObjectStructurePerFile.MultipleFound">
+  <rule ref="PSR1.Classes.ClassDeclaration.MultipleClasses">
     <exclude-pattern>*/tests/*</exclude-pattern>
   </rule>
 </ruleset>
