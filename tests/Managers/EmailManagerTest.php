@@ -4,6 +4,7 @@ namespace Studiometa\WPToolkitTest;
 
 use WP_UnitTestCase;
 use Studiometa\WPToolkit\Managers\EmailManager;
+use PHPMailer\PHPMailer\PHPMailer;
 
 /**
  * EmailManagerTest test case.
@@ -31,7 +32,7 @@ class EmailManagerTest extends WP_UnitTestCase
 
         // Trigger phpmailer configuration action.
         global $phpmailer;
-        assert($phpmailer instanceof PHPMailer\PHPMailer\PHPMailer);
+        assert($phpmailer instanceof PHPMailer);
         do_action_ref_array('phpmailer_init', array( &$phpmailer ));
 
 		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
