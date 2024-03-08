@@ -42,13 +42,13 @@ class Plugin
     {
         early_add_filter(
             'option_active_plugins',
-            function (array $plugins) {
+            function ($plugins) {
                 return self::do_disabling($plugins);
             }
         );
         early_add_filter(
             'site_option_active_sitewide_plugins',
-            function (array $plugins) {
+            function ($plugins) {
                 return self::do_network_disabling($plugins);
             }
         );
@@ -61,7 +61,7 @@ class Plugin
      *
      * @return string[] The filtered array of plugin filenames
      */
-    private static function do_disabling(array $plugins): array
+    private static function do_disabling($plugins): array
     {
         if (count(self::$disabled_plugins)) {
             foreach (self::$disabled_plugins as $disabled_plugin) {
