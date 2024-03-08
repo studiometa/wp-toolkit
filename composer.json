@@ -1,6 +1,5 @@
 {
   "name": "studiometa/wp-toolkit",
-  "version": "2.0.0",
   "description": "WordPress utilities for Studio Meta.",
   "license": "MIT",
   "type": "library",
