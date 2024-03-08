@@ -98,12 +98,13 @@ class AssetsManagerTest extends WP_UnitTestCase
     }
 
 
-    public function test_entries_are_enqeued_by_method() {
-        $this->assets_manager->enqueue_script( 'method-app', 'app.js' );
+    public function test_entries_are_enqeued_by_method()
+    {
+        $this->assets_manager->enqueue_script('method-app', 'app.js');
         $this->assertTrue(in_array('theme-method-app', wp_scripts()->queue, true));
         $this->assertTrue(str_ends_with(wp_scripts()->query('theme-method-app')->src, '/app.1234.js'));
 
-        $this->assets_manager->enqueue_style( 'method-styles', 'styles.css' );
+        $this->assets_manager->enqueue_style('method-styles', 'styles.css');
         $this->assertTrue(in_array('theme-method-styles', wp_styles()->queue, true));
         $this->assertTrue(str_ends_with(wp_styles()->query('theme-method-styles')->src, '/styles.1234.css'));
     }
