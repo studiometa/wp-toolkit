@@ -198,10 +198,11 @@ class TransientCleaner
      *
      * @param array|bool $value     New value.
      * @param array|bool $old_value Old value.
+     * @param string     $option    Option name.
      *
      * @return array|bool           New value
      */
-    public function merge_stored_transients_option_values($value, $old_value)
+    public function merge_stored_transients_option_values($value, $old_value, $option)
     {
         // Return `$value` if no previous value.
         if (false === $old_value) {
