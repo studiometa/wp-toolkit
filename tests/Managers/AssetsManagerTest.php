@@ -10,6 +10,8 @@ use Studiometa\WPToolkit\Managers\AssetsManager;
  */
 class AssetsManagerTest extends WP_UnitTestCase
 {
+    public AssetsManager $assets_manager;
+
     public function set_up():void
     {
         parent::set_up();
@@ -93,5 +95,16 @@ class AssetsManagerTest extends WP_UnitTestCase
         $this->assertTrue(in_array('theme-styles-1234-css', wp_styles()->queue, true));
         $this->assertTrue(in_array('theme-editor', wp_styles()->queue, true));
         $this->assertTrue(in_array('theme-post', wp_styles()->queue, true));
+    }
+
+
+    public function test_entries_are_enqeued_by_method() {
+        $this->assets_manager->enqueue_script( 'method-app', 'app.js' );
+        $this->assertTrue(in_array('theme-method-app', wp_scripts()->queue, true));
+        $this->assertTrue(str_ends_with(wp_scripts()->query('theme-method-app')->src, '/app.1234.js'));
+
+        $this->assets_manager->enqueue_style( 'method-styles', 'styles.css' );
+        $this->assertTrue(in_array('theme-method-styles', wp_styles()->queue, true));
+        $this->assertTrue(str_ends_with(wp_styles()->query('theme-method-styles')->src, '/styles.1234.css'));
     }
 }
