@@ -4,26 +4,31 @@ namespace Studiometa\WPToolkit\Sentry;
 
 use Studiometa\WPToolkit\Sentry\Config;
 use function Sentry\init as init_sentry;
-use function Studiometa\WPToolkit\{env,request};
+use function Studiometa\WPToolkit\env;
+use function Studiometa\WPToolkit\request;
 use function WeCodeMore\earlyAddAction as early_add_action;
 
-class Sentry {
-    private static Config $config;
-
-    static public function configureWithDefaults( string $root_dir ) {
+class Sentry
+{
+    public static function configureWithDefaults(string $root_dir): void
+    {
         $release = '';
 
         $file_path = $root_dir . '/package.json';
         if (file_exists($file_path)) {
-            $package = json_decode( file_get_contents( $file_path ) );
-            $release = $package->name . '@' . $package->version;
+            $package_content = file_get_contents($file_path);
+            if ($package_content) {
+                /** @var object{name: string, version:string} */
+                $package = json_decode($package_content);
+                $release = $package->name . '@' . $package->version;
+            }
         }
 
         $sample_rate = (float) (env('SENTRY_SAMPLE_RATE') ?: 0);
         $traces_sample_rate = (float) (env('SENTRY_TRACES_SAMPLE_RATE') ?: $sample_rate);
         $profiles_sample_rate = (float) (env('SENTRY_PROFILES_SAMPLE_RATE') ?: $sample_rate);
 
-        return self::configure(
+        self::configure(
             new Config(
                 dsn: env('SENTRY_DSN'),
                 js_loader_script: env('SENTRY_JS_LOADER_SCRIPT'),
@@ -35,23 +40,24 @@ class Sentry {
         );
     }
 
-    static private function configure( Config $config ) {
-        self::$config = $config;
-
+    private static function configure(Config $config): void
+    {
         init_sentry($config->toArray());
 
-        early_add_action('init', function() use ($config) {
+        early_add_action('init', function () use ($config) {
             wp_enqueue_script('sentry-loader-script', $config->js_loader_script, []);
             $js_config = $config->getJsConfig();
             $inline_script = "window.sentryOnLoad = () => { Sentry.init({$js_config}) }";
             wp_add_inline_script('sentry-loader-script', $inline_script, 'before');
         });
 
-        if ( $config->traces_sample_rate > 0 ) {
+        if ($config->traces_sample_rate > 0) {
             // Setup Sentry performance + profiling
             // Setup context for the full transaction
             $transactionContext = new \Sentry\Tracing\TransactionContext();
-            $transactionContext->setName(request()->server->get('REQUEST_URI', 'wp-cli'));
+            /** @var string */
+            $transactionName = request()->server->get('REQUEST_URI', 'wp-cli');
+            $transactionContext->setName($transactionName);
             $transactionContext->setOp('http.server');
 
             // Start the transaction

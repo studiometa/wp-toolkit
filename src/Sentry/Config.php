@@ -2,7 +2,8 @@
 
 namespace Studiometa\WPToolkit\Sentry;
 
-class Config {
+class Config
+{
     public function __construct(
         public string $dsn,
         public string $js_loader_script,
@@ -10,10 +11,11 @@ class Config {
         public string $release,
         public float $traces_sample_rate,
         public float $profiles_sample_rate,
-    )
-    {}
+    ) {
+    }
 
-    public function toArray(): array {
+    public function toArray(): array
+    {
         return [
             'dsn'                 => $this->dsn,
             'environment'         => $this->environment,
@@ -23,7 +25,8 @@ class Config {
         ];
     }
 
-    public function getJsConfig():string {
+    public function getJsConfig():string|false
+    {
         $config = $this->toArray();
         unset($config['dsn']);
         return json_encode($config);
