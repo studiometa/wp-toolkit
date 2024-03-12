@@ -17,10 +17,10 @@ class Config
     public function toArray(): array
     {
         return [
-            'dsn'                 => $this->dsn,
-            'environment'         => $this->environment,
-            'release'             => $this->release,
-            'traces_sample_rate'  => $this->traces_sample_rate,
+            'dsn'                  => $this->dsn,
+            'environment'          => $this->environment,
+            'release'              => $this->release,
+            'traces_sample_rate'   => $this->traces_sample_rate,
             'profiles_sample_rate' => $this->profiles_sample_rate,
         ];
     }
