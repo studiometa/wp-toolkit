@@ -35,7 +35,7 @@ class Sentry {
         );
     }
 
-    static public function configure( Config $config ) {
+    static private function configure( Config $config ) {
         self::$config = $config;
 
         init_sentry($config->toArray());
