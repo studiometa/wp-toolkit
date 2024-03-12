@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## v2.1.0 - 2024.03.12
+
+### Added
+
+- Add a `Sentry` class to easily configure Sentry integration for both front-end and back-end ([#29](https://github.com/studiometa/wp-toolkit/pull/29))
+
 ## v2.0.1 - 2024.03.09
 
 ### Fixed
