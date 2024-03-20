@@ -23,6 +23,46 @@ function env(string $key): string
 }
 
 /**
+ * Test if the current environment is prod.
+ */
+function env_is_prod(): bool
+{
+    return Env::is_prod();
+}
+
+/**
+ * Test if the current environment is preprod.
+ */
+function env_is_preprod(): bool
+{
+    return Env::is_preprod();
+}
+
+/**
+ * Test if the current environment is local.
+ */
+function env_is_local(): bool
+{
+    return Env::is_local();
+}
+
+/**
+ * Test if the current environment is staging.
+ */
+function env_is_staging(): bool
+{
+    return Env::is_staging();
+}
+
+/**
+ * Test if the current environment is development.
+ */
+function env_is_development(): bool
+{
+    return Env::is_development();
+}
+
+/**
  * Get a Request instance from the symfony/http-foundation package.
  *
  * @see https://symfony.com/doc/current/components/http_foundation.html#request
