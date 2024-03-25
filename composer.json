@@ -11,6 +11,7 @@
     "studiometa/webpack-config": "^5.0",
     "symfony/http-foundation": "^6.4|^7.0",
     "symfony/yaml": "^6.4|^7.0",
+    "timber/timber": "^1.0|^2.0",
     "wecodemore/wordpress-early-hook": "^1.2"
   },
   "require-dev": {
@@ -47,7 +48,8 @@
   "config": {
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true,
-      "phpstan/extension-installer": true
+      "phpstan/extension-installer": true,
+      "composer/installers": true
     },
     "sort-packages": true
   }
