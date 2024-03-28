@@ -9,7 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 
 - Add utility functions to test the current environment ([#31](https://github.com/studiometa/wp-toolkit/pull/31))
-
+- Add a `FacetsManager` to easily filter content with `pre_get_posts` ([#31](https://github.com/studiometa/wp-toolkit/pull/31))
+- Add a `facets_get('key')` Twig function to easily get the value of a facets filter from the query string ([#31](https://github.com/studiometa/wp-toolkit/pull/31))
 
 ## v2.1.0 - 2024.03.12
 
