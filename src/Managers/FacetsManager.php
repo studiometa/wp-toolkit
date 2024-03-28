@@ -52,7 +52,7 @@ class FacetsManager implements ManagerInterface
      * Add facets defined as get or post parameters from the request to the main WP Query.
      * For the list of available parameters, see the documentation for `WP_Query` linked below.
      *
-     * @see https://developer.wordpress.org/reference/classes/wp_query/#search-parameters
+     * @see https://developer.wordpress.org/reference/classes/wp_query/#parameters
      *
      * @param WP_Query $query The query for the current request.
      * @return void
