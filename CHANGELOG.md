@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## v2.2.1 - 2024.03.28
+
+### Fixed
+
+- Allow passing custom options to `sentry_init()` ([a2641db](https://github.com/studiometa/wp-toolkit/commit/a2641db))
+
 ## v2.2.0 - 2024.03.28
 
 ### Added
