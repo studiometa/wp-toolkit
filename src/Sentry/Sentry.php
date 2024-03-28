@@ -10,7 +10,7 @@ use function WeCodeMore\earlyAddAction as early_add_action;
 
 class Sentry
 {
-    public static function configureWithDefaults(string $root_dir): void
+    public static function configureWithDefaults(string $root_dir, array $options = []): void
     {
         $release = '';
 
@@ -37,12 +37,13 @@ class Sentry
                 traces_sample_rate: $traces_sample_rate,
                 profiles_sample_rate: $profiles_sample_rate,
             ),
+            $options
         );
     }
 
-    private static function configure(Config $config): void
+    private static function configure(Config $config, array $options = []): void
     {
-        init_sentry($config->toArray());
+        init_sentry($config->toArray() + $options);
 
         early_add_action('init', function () use ($config) {
             wp_enqueue_script('sentry-loader-script', $config->js_loader_script, []);
