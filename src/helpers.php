@@ -63,6 +63,14 @@ function env_is_development(): bool
 }
 
 /**
+ * Test if the current request comes from WP CLI.
+ */
+function env_is_wp_cli(): bool
+{
+    return Env::is_wp_cli();
+}
+
+/**
  * Get a Request instance from the symfony/http-foundation package.
  *
  * @see https://symfony.com/doc/current/components/http_foundation.html#request

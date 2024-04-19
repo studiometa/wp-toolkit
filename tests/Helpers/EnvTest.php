@@ -5,13 +5,13 @@ namespace Studiometa\WPToolkitTest;
 use PHPUnit\Framework\TestCase;
 use Studiometa\WPToolkit\Helpers\Env;
 use function Studiometa\WPToolkit\env;
+use function Studiometa\WPToolkit\env_is_wp_cli;
 
 /**
  * EnvTest test case.
  */
 class EnvTest extends TestCase
 {
-
     /**
      * Test the request() function
      *
@@ -48,5 +48,14 @@ class EnvTest extends TestCase
             $this->assertTrue($fn());
             $this->assertTrue(Env::$name());
         }
+    }
+
+    public function test_env_is_wp_cli()
+    {
+        $this->assertFalse(Env::is_wp_cli());
+        $this->assertFalse(env_is_wp_cli());
+        define('WP_CLI', false);
+        $this->assertFalse(Env::is_wp_cli());
+        $this->assertFalse(env_is_wp_cli());
     }
 }

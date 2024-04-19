@@ -82,4 +82,9 @@ class Env
     {
         return self::get_app_env() === 'development';
     }
+
+    public static function is_wp_cli(): bool
+    {
+        return defined('WP_CLI') ? WP_CLI : false;
+    }
 }
