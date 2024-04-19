@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## v2.2.2 - 2024.04.19
+
+### Fixed
+
+- Fix a dependency constraint ([0f5d80d](https://github.com/studiometa/wp-toolkit/commit/0f5d80d))
+
 ## v2.2.1 - 2024.03.28
 
 ### Fixed
