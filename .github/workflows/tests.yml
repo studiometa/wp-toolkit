@@ -125,6 +125,9 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
+      - name: Install WP Tests dependencies
+        run: sudo apt update && sudo apt install -y subversion
+
       - name: Clean old WP Tests
         run: mysql --host 127.0.0.1 --port 3306 -uroot -proot -e "DROP DATABASE IF EXISTS wordpress_test;" && rm -fr /tmp/wordpress*
 
