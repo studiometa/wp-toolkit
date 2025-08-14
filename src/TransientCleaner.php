@@ -107,7 +107,7 @@ class TransientCleaner
         add_action('save_post', array( $this, 'post_transient_cleaner' ), 10, 2);
         add_action('edit_term', array( $this, 'term_transient_cleaner' ), 10, 3);
         add_action('updated_option', array( $this, 'option_transient_cleaner' ), 10, 2);
-        add_action('setted_transient', array( $this, 'store_transient_key' ));
+        add_action('set_transient', array( $this, 'store_transient_key' ));
         add_filter(
             'pre_update_option_' . self::OPTION_STORED_TRANSIENTS,
             array( $this, 'merge_stored_transients_option_values' ),
