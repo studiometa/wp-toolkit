@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- Add support for custom taxonomies filtering ([#42](https://github.com/studiometa/wp-toolkit/issues/42), [#43](https://github.com/studiometa/wp-toolkit/pull/43), [ae541b5](https://github.com/studiometa/wp-toolkit/commit/ae541b5))
+
 ## v2.2.2 - 2024.04.19
 
 ### Fixed
@@ -49,9 +53,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - Add an `EmailManager` to configure `PHPMailer` via environment variables ([#22](https://github.com/studiometa/wp-toolkit/pull/22))
 - Add `enqueue_script($handle, $path)` and `enqueue_style($handle, $path)` method to the `AssetsManager` class ([#23](https://github.com/studiometa/wp-toolkit/pull/23))
 - Add a `Plugin::disable` method to the `Plugin` helper class ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
-- Add a `request` helper function  ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
+- Add a `request` helper function ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
 - Add a `Request` helper class ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
-- Add a `env` helper function  ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
+- Add a `env` helper function ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
 - Add a `Env` helper class ([#26](https://github.com/studiometa/wp-toolkit/pull/26))
 
 ### Changed
