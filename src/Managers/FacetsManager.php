@@ -8,7 +8,6 @@
 namespace Studiometa\WPToolkit\Managers;
 
 use WP_Query;
-use Timber\Timber;
 use Twig\Environment;
 use Twig\TwigFunction;
 use Studiometa\WPToolkit\Managers\ManagerInterface;
@@ -63,9 +62,106 @@ class FacetsManager implements ManagerInterface
             return;
         }
 
+        $tax_queries = [];
+        $regular_vars = [];
+
         foreach ($this->facets as $query_var => $value) {
-            $query->query_vars[ $query_var ] = $value;
+            $taxonomy_data = $this->parse_taxonomy_query_var($query_var);
+            
+            if ($taxonomy_data) {
+                $tax_queries[] = $this->build_tax_query($taxonomy_data, $value);
+            } else {
+                $regular_vars[$query_var] = $value;
+            }
         }
+
+        // Apply regular query vars
+        foreach ($regular_vars as $query_var => $value) {
+            $query->query_vars[$query_var] = $value;
+        }
+
+        // Apply taxonomy queries
+        if (!empty($tax_queries)) {
+            $existing_tax_query = $query->get('tax_query', []);
+            if (!empty($existing_tax_query)) {
+                $tax_queries[] = $existing_tax_query;
+            }
+            $query->set('tax_query', $tax_queries);
+        }
+    }
+
+    /**
+     * Parse a query variable to determine if it's a taxonomy query.
+     *
+     * @param string $query_var The query variable name.
+     * @return array|null Array with taxonomy and operator data, or null if not a taxonomy query.
+     */
+    private function parse_taxonomy_query_var(string $query_var): ?array
+    {
+        $taxonomies = get_taxonomies(['public' => true]);
+        
+        // Direct taxonomy match
+        if (array_key_exists($query_var, $taxonomies)) {
+            return ['taxonomy' => $query_var, 'operator' => 'IN'];
+        }
+
+        // Check for suffixed taxonomy queries
+        $suffixes = ['__in', '__not_in', '__and', '__exists'];
+        foreach ($suffixes as $suffix) {
+            if (str_ends_with($query_var, $suffix)) {
+                $taxonomy = substr($query_var, 0, -strlen($suffix));
+                if (array_key_exists($taxonomy, $taxonomies)) {
+                    $operator = match ($suffix) {
+                        '__in' => 'IN',
+                        '__not_in' => 'NOT IN',
+                        '__and' => 'AND',
+                        '__exists' => 'EXISTS',
+                    };
+                    return ['taxonomy' => $taxonomy, 'operator' => $operator];
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Build a tax_query array for a given taxonomy and value.
+     *
+     * @param array $taxonomy_data Array with taxonomy and operator info.
+     * @param string|array $value The query value.
+     * @return array The tax_query array.
+     */
+    private function build_tax_query(array $taxonomy_data, string|array $value): array
+    {
+        $tax_query = [
+            'taxonomy' => $taxonomy_data['taxonomy'],
+            'operator' => $taxonomy_data['operator'],
+        ];
+
+        if ($taxonomy_data['operator'] === 'EXISTS') {
+            // EXISTS queries don't need terms/field
+            return $tax_query;
+        }
+
+        // Handle different value types
+        if (is_array($value)) {
+            $terms = $value;
+        } else {
+            $terms = array_map('trim', explode(',', $value));
+        }
+
+        // Determine if we're dealing with term IDs or slugs
+        $first_term = reset($terms);
+        if (is_numeric($first_term)) {
+            $tax_query['field'] = 'term_id';
+            $tax_query['terms'] = array_map('intval', $terms);
+        } else {
+            $tax_query['field'] = 'slug';
+            $tax_query['terms'] = $terms;
+        }
+
+        return $tax_query;
     }
 
     /**
