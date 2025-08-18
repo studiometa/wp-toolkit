@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## v2.3.0 - 2024.08.14
+
 ### Added
 
 - Add support for custom taxonomies filtering ([#42](https://github.com/studiometa/wp-toolkit/issues/42), [#43](https://github.com/studiometa/wp-toolkit/pull/43), [ae541b5](https://github.com/studiometa/wp-toolkit/commit/ae541b5))
