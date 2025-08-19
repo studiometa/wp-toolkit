@@ -210,4 +210,21 @@ class FacetsManagerTest extends WP_UnitTestCase
         $this->assertEquals(['slug1', 'slug2'], $tax_query[0]['terms']);
         $this->assertEquals('slug', $tax_query[0]['field']);
     }
+
+    public function test_it_should_not_add_facets_to_non_main_query()
+    {
+        request()->query->set('facets', ['cat' => 1]);
+        $manager = new FacetsManager();
+        $manager->run();
+
+        // Create a non-main query
+        $secondary_query = new WP_Query();
+        $secondary_query->init();
+        
+        // Manually call the method to simulate what happens on pre_get_posts
+        $manager->add_facets_to_query($secondary_query);
+
+        // The facets should not be applied to the secondary query
+        $this->assertFalse(isset($secondary_query->query_vars['cat']));
+    }
 }
