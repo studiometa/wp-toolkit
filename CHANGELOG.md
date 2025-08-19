@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## v2.3.1 - 2024.08.19
+
 ### Fixed
 
 - Fix facets applying on non-main queries ([#49](https://github.com/studiometa/wp-toolkit/issues/49), [#50](https://github.com/studiometa/wp-toolkit/pull/50), [9c098c7](https://github.com/studiometa/wp-toolkit/commit/9c098c7))
