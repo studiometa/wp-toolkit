@@ -58,7 +58,7 @@ class FacetsManager implements ManagerInterface
      */
     public function add_facets_to_query(WP_Query &$query): void
     {
-        if (!is_array($this->facets)) {
+        if (!is_array($this->facets) || !$query->is_main_query()) {
             return;
         }
 
